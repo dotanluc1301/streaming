@@ -1890,8 +1890,8 @@
         <!-- Provider selector -->
         <div class="provider-label">Streaming Provider</div>
         <div class="provider-tabs" id="provider-tabs">
-          <button class="provider-tab active" onclick="setProvider('vidsrcme', this)">VidSrc.me</button>
-          <button class="provider-tab" onclick="setProvider('superembed', this)">SuperEmbed</button>
+          <button class="provider-tab active" onclick="setProvider('vidking', this)">Vidking</button>
+          <button class="provider-tab" onclick="setProvider('vidsrcme', this)">VidSrc.me</button>
           <button class="provider-tab" onclick="setProvider('vidfastnet', this)">Vidfast</button>
           <button class="provider-tab" onclick="setProvider('2embed', this)">2Embed</button>
           <button class="provider-tab" onclick="setProvider('vsembed', this)">VSEmbed</button>
@@ -1936,8 +1936,8 @@
         <div class="player-subtitle" id="player-subtitle"></div>
       </div>
       <div class="player-providers">
-        <button class="player-provider-btn active" onclick="switchPlayerProvider('vidsrcme', this)">VidSrc.me</button>
-        <button class="player-provider-btn" onclick="switchPlayerProvider('superembed', this)">SuperEmbed</button>
+        <button class="player-provider-btn active" onclick="switchPlayerProvider('vidking', this)">Vidking</button>
+        <button class="player-provider-btn" onclick="switchPlayerProvider('vidsrcme', this)">VidSrc.me</button>
         <button class="player-provider-btn" onclick="switchPlayerProvider('vidfastnet', this)">Vidfast</button>
         <button class="player-provider-btn" onclick="switchPlayerProvider('2embed', this)">2Embed</button>
         <button class="player-provider-btn" onclick="switchPlayerProvider('vsembed', this)">VSEmbed</button>
@@ -1977,8 +1977,8 @@
         <div class="settings-field">
           <label class="settings-label">Default Provider</label>
           <select class="settings-select" id="setting-provider">
+            <option value="vidking">Vidking</option>
             <option value="vidsrcme">VidSrc.me</option>
-            <option value="superembed">SuperEmbed</option>
             <option value="vidfastnet">Vidfast</option>
             <option value="2embed">2Embed</option>
             <option value="vsembed">VSEmbed</option>
@@ -2041,7 +2041,7 @@
     // ==================== STATE ====================
     let settings = {
       apiKey: DEFAULT_API_KEY,
-      provider: 'vidsrcme',
+      provider: 'vidking',
       subLang: ''
     };
     let currentModal = null;   // { id, type, title, data }
@@ -2074,7 +2074,7 @@
         if (!settings.apiKey) settings.apiKey = DEFAULT_API_KEY;
       } catch (e) { }
       document.getElementById('setting-apikey').value = settings.apiKey !== DEFAULT_API_KEY ? settings.apiKey : '';
-      document.getElementById('setting-provider').value = settings.provider || 'vidsrcme';
+      document.getElementById('setting-provider').value = settings.provider || 'vidking';
       document.getElementById('setting-sublang').value = settings.subLang || '';
     }
 
@@ -2146,9 +2146,9 @@
         case 'vidsrcme':
           if (type === 'movie') return `https://vidsrcme.ru/embed/movie?tmdb=${id}${sub}`;
           return `https://vidsrcme.ru/embed/tv?tmdb=${id}&season=${season}&episode=${episode}${sub}`;
-        case 'superembed':
-          if (type === 'movie') return `https://seapi.link/?type=movie&id=${id}`;
-          return `https://seapi.link/?type=tv&id=${id}&season=${season}&episode=${episode}`;
+        case 'vidking':
+          if (type === 'movie') return `https://vidking.net/embed/movie/${id}/?color=e50914&autoPlay=true&nextEpisode=true&episodeSelector=true`;
+          return `https://vidking.net/embed/tv/${id}/${season}/${episode}?color=e50914&autoPlay=true&nextEpisode=true&episodeSelector=true`;
         case 'vidfastnet':
           if (type === 'movie') return `https://vidfast.pro/movie/${id}?autoPlay=true`;
           return `https://vidfast.pro/tv/${id}/${season}/${episode}?autoPlay=true`;
@@ -2177,7 +2177,7 @@
           if (type === 'movie') return `https://mapple.uk/watch/movie/${id}?autoPlay=true`;
           return `https://mapple.uk/watch/tv/${id}-${season}-${episode}?autoPlay=true`;
         default:
-          return buildEmbedUrl('vidsrcme', type, id, season, episode);
+          return buildEmbedUrl('vidking', type, id, season, episode);
       }
     }
 
@@ -2646,7 +2646,7 @@
     async function openModal(id, type, itemData, autoWatch = false, initSeason = 1, initEpisode = 1) {
       modalItem = itemData;
       currentModal = { id, type };
-      modalProvider = settings.provider || 'vidsrcme';
+      modalProvider = settings.provider || 'vidking';
 
       // Reset provider tabs
       document.querySelectorAll('.provider-tab').forEach(t => t.classList.remove('active'));
