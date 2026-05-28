@@ -1092,38 +1092,59 @@
       font-size: 0.95rem;
     }
 
+    .player-title-wrap {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .player-title-meta {
+      min-width: 160px;
+    }
+
     .player-subtitle {
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
 
-    .player-providers {
+    .player-tv-controls {
+      margin: 0;
       display: flex;
-      gap: 6px;
+      align-items: center;
     }
 
-    .player-provider-btn {
-      padding: 6px 12px;
+    .player-tv-controls .tv-selects {
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+
+    .player-tv-controls .tv-select {
+      width: 150px;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+    }
+
+    .player-provider-select {
+      min-width: 150px;
+      padding: 8px 12px;
       border-radius: var(--radius-sm);
       cursor: pointer;
-      font-size: 0.78rem;
+      font-size: 0.85rem;
       font-weight: 600;
       border: 1px solid var(--border);
       background: var(--bg-elevated);
-      color: var(--text-secondary);
+      color: var(--text-primary);
+      font-family: inherit;
       transition: var(--transition);
     }
 
-    .player-provider-btn:hover {
+    .player-provider-select:focus {
+      outline: none;
       border-color: var(--accent-1);
-      color: var(--text-primary);
-    }
-
-    .player-provider-btn.active {
-      background: var(--accent-grad);
-      border-color: transparent;
-      color: #fff;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
     }
 
     .player-frame-wrap {
@@ -1169,6 +1190,10 @@
     .player-loading-text {
       color: var(--text-muted);
       font-size: 0.9rem;
+    }
+
+    .lazy-load-sentinel {
+      min-height: 1px;
     }
 
     /* ==================== TOAST ==================== */
@@ -1424,8 +1449,29 @@
         font-size: 2rem;
       }
 
-      .player-providers {
-        display: none;
+      .player-topbar {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .player-title-wrap {
+        order: 3;
+        flex-basis: 100%;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .player-tv-controls .tv-selects {
+        flex-wrap: wrap;
+      }
+
+      .player-tv-controls .tv-select {
+        width: min(150px, calc(50vw - 28px));
+      }
+
+      .player-provider-select {
+        margin-left: auto;
       }
 
       #settings-panel {
@@ -1776,9 +1822,7 @@
         <div class="filter-pills" style="padding: 0 24px 20px; max-width:1400px; margin:0 auto"
           id="movie-genre-filters"></div>
         <div class="media-grid" id="movies-grid"></div>
-        <div style="text-align:center; padding: 20px" id="movies-load-more">
-          <button class="btn-secondary" onclick="loadMoreMovies()" id="movies-more-btn">Load More</button>
-        </div>
+        <div class="lazy-load-sentinel" style="padding: 20px" id="movies-load-more" aria-hidden="true"></div>
       </div>
     </div>
 
@@ -1793,9 +1837,7 @@
         <div class="filter-pills" style="padding: 0 24px 20px; max-width:1400px; margin:0 auto" id="tv-genre-filters">
         </div>
         <div class="media-grid" id="tvshows-grid"></div>
-        <div style="text-align:center; padding: 20px" id="tvshows-load-more">
-          <button class="btn-secondary" onclick="loadMoreTV()" id="tv-more-btn">Load More</button>
-        </div>
+        <div class="lazy-load-sentinel" style="padding: 20px" id="tvshows-load-more" aria-hidden="true"></div>
       </div>
     </div>
 
@@ -1856,9 +1898,7 @@
           </div>
         </div>
         <div class="media-grid" id="genre-results-grid"></div>
-        <div style="text-align:center; padding: 20px">
-          <button class="btn-secondary" onclick="loadMoreGenreResults()" id="genre-more-btn">Load More</button>
-        </div>
+        <div class="lazy-load-sentinel" style="padding: 20px" id="genre-results-load-more" aria-hidden="true"></div>
       </div>
     </div>
 
@@ -1927,29 +1967,30 @@
   <div id="player-overlay">
     <div class="player-topbar">
       <button class="player-back" onclick="closePlayer()">← Back</button>
-      <div style="flex:1">
-        <div class="player-title-bar" id="player-title">Loading…</div>
-        <div class="player-subtitle" id="player-subtitle"></div>
+      <div class="player-title-wrap">
+        <div class="player-title-meta">
+          <div class="player-title-bar" id="player-title">Loading…</div>
+          <div class="player-subtitle" id="player-subtitle"></div>
+        </div>
+        <div class="tv-controls player-tv-controls" id="player-tv-controls" style="display:none">
+          <div class="tv-selects">
+            <select class="tv-select" id="player-season-select" onchange="onPlayerSeasonChange()">
+              <option>Season</option>
+            </select>
+            <select class="tv-select" id="player-episode-select" onchange="onPlayerEpisodeChange()">
+              <option>Episode</option>
+            </select>
+          </div>
+        </div>
       </div>
-      <div class="player-providers">
-        <button class="player-provider-btn active" onclick="switchPlayerProvider('vidking', this)">Vidking</button>
-        <button class="player-provider-btn" onclick="switchPlayerProvider('vidfastnet', this)">Vidfast</button>
-        <button class="player-provider-btn" onclick="switchPlayerProvider('vidnest', this)">VidNest</button>
-        <button class="player-provider-btn" onclick="switchPlayerProvider('111movies', this)">111Movies</button>
-        <button class="player-provider-btn" onclick="switchPlayerProvider('mappletv', this)">MappleTV</button>
-        <button class="player-provider-btn" onclick="switchPlayerProvider('vsembed', this)">VSEmbed</button>
-      </div>
-    </div>
-    <div class="tv-controls" id="player-tv-controls" style="display:none">
-      <div class="provider-label">Season &amp; Episode</div>
-      <div class="tv-selects">
-        <select class="tv-select" id="player-season-select" onchange="onPlayerSeasonChange()">
-          <option>Season</option>
-        </select>
-        <select class="tv-select" id="player-episode-select" onchange="onPlayerEpisodeChange()">
-          <option>Episode</option>
-        </select>
-      </div>
+      <select class="player-provider-select" id="player-provider-select" onchange="switchPlayerProvider(this.value)">
+        <option value="vidking">Vidking</option>
+        <option value="vidfastnet">Vidfast</option>
+        <option value="vidnest">VidNest</option>
+        <option value="111movies">111Movies</option>
+        <option value="mappletv">MappleTV</option>
+        <option value="vsembed">VSEmbed</option>
+      </select>
     </div>
     <div class="player-frame-wrap">
       <div class="player-loading" id="player-loading">
@@ -2068,8 +2109,13 @@
     let tvPageNum = 1;
     let movieTotalPages = 1;
     let tvTotalPages = 1;
+    let genreTotalPages = 1;
+    let movieLoading = false;
+    let tvLoading = false;
+    let genreLoading = false;
     let movieObserver = null;
     let tvObserver = null;
+    let genreObserver = null;
 
     // ==================== LOCALSTORAGE ====================
     function loadSettings() {
@@ -2507,12 +2553,18 @@
     async function loadMoviesPage() {
       moviePageNum = 1;
       movieGenreFilter = null;
+      movieTotalPages = 1;
+      movieLoading = true;
+      updateLazySentinel('movies-load-more', false);
       renderMovieGenreFilters();
-      const data = await tmdb('/movie/popular', { page: 1 });
-      movieTotalPages = data.total_pages || 1;
-      renderCards('movies-grid', (data.results || []).map(i => ({ ...i, media_type: 'movie' })));
-      // show manual button only if IntersectionObserver isn't available
-      document.getElementById('movies-more-btn').style.display = ('IntersectionObserver' in window) ? 'none' : (movieTotalPages > 1 ? 'block' : 'none');
+      try {
+        const data = await tmdb('/movie/popular', { page: 1 });
+        movieTotalPages = data.total_pages || 1;
+        renderCards('movies-grid', (data.results || []).map(i => ({ ...i, media_type: 'movie' })));
+      } finally {
+        movieLoading = false;
+        updateLazySentinel('movies-load-more', moviePageNum < movieTotalPages);
+      }
     }
 
     function renderMovieGenreFilters() {
@@ -2533,25 +2585,38 @@
       btn.classList.add('active');
       movieGenreFilter = genreId;
       moviePageNum = 1;
+      movieTotalPages = 1;
+      movieLoading = true;
+      updateLazySentinel('movies-load-more', false);
       const params = { page: 1, sort_by: 'popularity.desc' };
       if (genreId) params.with_genres = genreId;
-      const data = await tmdb(genreId ? '/discover/movie' : '/movie/popular', params);
-      renderCards('movies-grid', (data.results || []).map(i => ({ ...i, media_type: 'movie' })));
-      moviePageNum = 1;
+      try {
+        const data = await tmdb(genreId ? '/discover/movie' : '/movie/popular', params);
+        movieTotalPages = data.total_pages || 1;
+        renderCards('movies-grid', (data.results || []).map(i => ({ ...i, media_type: 'movie' })));
+      } finally {
+        movieLoading = false;
+        updateLazySentinel('movies-load-more', moviePageNum < movieTotalPages);
+      }
     }
 
     async function loadMoreMovies() {
+      if (movieLoading || moviePageNum >= movieTotalPages) return;
+      movieLoading = true;
       moviePageNum++;
-      const params = { page: moviePageNum, sort_by: 'popularity.desc' };
-      if (movieGenreFilter) params.with_genres = movieGenreFilter;
-      const path = movieGenreFilter ? '/discover/movie' : '/movie/popular';
-      const data = await tmdb(path, params);
-      movieTotalPages = data.total_pages || movieTotalPages;
-      renderCards('movies-grid', (data.results || []).map(i => ({ ...i, media_type: 'movie' })), false);
-      if (moviePageNum >= movieTotalPages) {
-        const container = document.getElementById('movies-load-more');
-        if (movieObserver && container) movieObserver.unobserve(container);
-        document.getElementById('movies-more-btn').style.display = 'none';
+      try {
+        const params = { page: moviePageNum, sort_by: 'popularity.desc' };
+        if (movieGenreFilter) params.with_genres = movieGenreFilter;
+        const path = movieGenreFilter ? '/discover/movie' : '/movie/popular';
+        const data = await tmdb(path, params);
+        movieTotalPages = data.total_pages || movieTotalPages;
+        renderCards('movies-grid', (data.results || []).map(i => ({ ...i, media_type: 'movie' })), false);
+      } catch (e) {
+        moviePageNum--;
+        throw e;
+      } finally {
+        movieLoading = false;
+        updateLazySentinel('movies-load-more', moviePageNum < movieTotalPages);
       }
     }
 
@@ -2562,11 +2627,18 @@
     async function loadTVPage() {
       tvPageNum = 1;
       tvGenreFilter = null;
+      tvTotalPages = 1;
+      tvLoading = true;
+      updateLazySentinel('tvshows-load-more', false);
       renderTVGenreFilters();
-      const data = await tmdb('/tv/popular', { page: 1 });
-      tvTotalPages = data.total_pages || 1;
-      renderCards('tvshows-grid', (data.results || []).map(i => ({ ...i, media_type: 'tv' })));
-      document.getElementById('tv-more-btn').style.display = ('IntersectionObserver' in window) ? 'none' : (tvTotalPages > 1 ? 'block' : 'none');
+      try {
+        const data = await tmdb('/tv/popular', { page: 1 });
+        tvTotalPages = data.total_pages || 1;
+        renderCards('tvshows-grid', (data.results || []).map(i => ({ ...i, media_type: 'tv' })));
+      } finally {
+        tvLoading = false;
+        updateLazySentinel('tvshows-load-more', tvPageNum < tvTotalPages);
+      }
     }
 
     function renderTVGenreFilters() {
@@ -2587,24 +2659,38 @@
       btn.classList.add('active');
       tvGenreFilter = genreId;
       tvPageNum = 1;
+      tvTotalPages = 1;
+      tvLoading = true;
+      updateLazySentinel('tvshows-load-more', false);
       const params = { page: 1, sort_by: 'popularity.desc' };
       if (genreId) params.with_genres = genreId;
-      const data = await tmdb(genreId ? '/discover/tv' : '/tv/popular', params);
-      renderCards('tvshows-grid', (data.results || []).map(i => ({ ...i, media_type: 'tv' })));
+      try {
+        const data = await tmdb(genreId ? '/discover/tv' : '/tv/popular', params);
+        tvTotalPages = data.total_pages || 1;
+        renderCards('tvshows-grid', (data.results || []).map(i => ({ ...i, media_type: 'tv' })));
+      } finally {
+        tvLoading = false;
+        updateLazySentinel('tvshows-load-more', tvPageNum < tvTotalPages);
+      }
     }
 
     async function loadMoreTV() {
+      if (tvLoading || tvPageNum >= tvTotalPages) return;
+      tvLoading = true;
       tvPageNum++;
-      const params = { page: tvPageNum, sort_by: 'popularity.desc' };
-      if (tvGenreFilter) params.with_genres = tvGenreFilter;
-      const path = tvGenreFilter ? '/discover/tv' : '/tv/popular';
-      const data = await tmdb(path, params);
-      tvTotalPages = data.total_pages || tvTotalPages;
-      renderCards('tvshows-grid', (data.results || []).map(i => ({ ...i, media_type: 'tv' })), false);
-      if (tvPageNum >= tvTotalPages) {
-        const container = document.getElementById('tvshows-load-more');
-        if (tvObserver && container) tvObserver.unobserve(container);
-        document.getElementById('tv-more-btn').style.display = 'none';
+      try {
+        const params = { page: tvPageNum, sort_by: 'popularity.desc' };
+        if (tvGenreFilter) params.with_genres = tvGenreFilter;
+        const path = tvGenreFilter ? '/discover/tv' : '/tv/popular';
+        const data = await tmdb(path, params);
+        tvTotalPages = data.total_pages || tvTotalPages;
+        renderCards('tvshows-grid', (data.results || []).map(i => ({ ...i, media_type: 'tv' })), false);
+      } catch (e) {
+        tvPageNum--;
+        throw e;
+      } finally {
+        tvLoading = false;
+        updateLazySentinel('tvshows-load-more', tvPageNum < tvTotalPages);
       }
     }
 
@@ -2637,32 +2723,59 @@
       currentGenreId = genreId;
       currentGenreType = 'movie';
       genrePage = 1;
+      genreTotalPages = 1;
+      genreLoading = true;
+      updateLazySentinel('genre-results-load-more', false);
       document.getElementById('genre-results-title').textContent = genreName;
       document.getElementById('genre-filter-movie').classList.add('active');
       document.getElementById('genre-filter-tv').classList.remove('active');
       showPage('genre-results');
-      await loadGenreResults(true);
+      try {
+        await loadGenreResults(true);
+      } finally {
+        genreLoading = false;
+        updateLazySentinel('genre-results-load-more', genrePage < genreTotalPages);
+      }
     }
 
     async function setGenreType(type) {
       currentGenreType = type;
       genrePage = 1;
+      genreTotalPages = 1;
+      genreLoading = true;
+      updateLazySentinel('genre-results-load-more', false);
       document.getElementById('genre-filter-movie').classList.toggle('active', type === 'movie');
       document.getElementById('genre-filter-tv').classList.toggle('active', type === 'tv');
-      await loadGenreResults(true);
+      try {
+        await loadGenreResults(true);
+      } finally {
+        genreLoading = false;
+        updateLazySentinel('genre-results-load-more', genrePage < genreTotalPages);
+      }
     }
 
     async function loadGenreResults(clear = false) {
       const path = `/discover/${currentGenreType}`;
       const data = await tmdb(path, { page: genrePage, with_genres: currentGenreId, sort_by: 'popularity.desc' });
+      genreTotalPages = data.total_pages || 1;
       const items = (data.results || []).map(i => ({ ...i, media_type: currentGenreType }));
       renderCards('genre-results-grid', items, clear);
-      document.getElementById('genre-more-btn').style.display = genrePage < data.total_pages ? 'block' : 'none';
+      updateLazySentinel('genre-results-load-more', genrePage < genreTotalPages);
     }
 
     async function loadMoreGenreResults() {
+      if (genreLoading || genrePage >= genreTotalPages) return;
+      genreLoading = true;
       genrePage++;
-      await loadGenreResults(false);
+      try {
+        await loadGenreResults(false);
+      } catch (e) {
+        genrePage--;
+        throw e;
+      } finally {
+        genreLoading = false;
+        updateLazySentinel('genre-results-load-more', genrePage < genreTotalPages);
+      }
     }
 
     // ==================== SEARCH ====================
@@ -3095,10 +3208,8 @@
         if (playerControls) playerControls.style.display = 'none';
       }
 
-      // Sync provider buttons
-      document.querySelectorAll('.player-provider-btn').forEach(b => b.classList.remove('active'));
-      const activeProvBtn = document.querySelector(`.player-provider-btn[onclick*="${modalProvider}"]`);
-      if (activeProvBtn) activeProvBtn.classList.add('active');
+      const playerProviderSel = document.getElementById('player-provider-select');
+      if (playerProviderSel) playerProviderSel.value = modalProvider;
 
       // Load iframe
       loadPlayerIframe(modalProvider);
@@ -3126,9 +3237,9 @@
       }, 100);
     }
 
-    async function switchPlayerProvider(provider, btn) {
-      document.querySelectorAll('.player-provider-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
+    async function switchPlayerProvider(provider) {
+      const playerProviderSel = document.getElementById('player-provider-select');
+      if (playerProviderSel) playerProviderSel.value = provider;
       currentPlayer.provider = provider;
 
       // If currently playing a TV item, refresh season/episode lists
@@ -3191,21 +3302,43 @@
 
     // ==================== INIT ====================
     // ==================== INFINITE SCROLL SETUP ====================
+    function updateLazySentinel(id, shouldShow) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = shouldShow ? 'block' : 'none';
+    }
+
+    function loadVisibleLazyPages() {
+      if (document.getElementById('page-movies').classList.contains('active') && moviePageNum < movieTotalPages) {
+        loadMoreMovies().catch(() => { });
+      }
+      if (document.getElementById('page-tvshows').classList.contains('active') && tvPageNum < tvTotalPages) {
+        loadMoreTV().catch(() => { });
+      }
+      if (document.getElementById('page-genre-results').classList.contains('active') && genrePage < genreTotalPages) {
+        loadMoreGenreResults().catch(() => { });
+      }
+    }
+
+    function setupScrollLazyLoadFallback() {
+      window.addEventListener('scroll', () => {
+        const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 600;
+        if (nearBottom) loadVisibleLazyPages();
+      }, { passive: true });
+    }
+
     function setupInfiniteScroll() {
       const moviesLoadMore = document.getElementById('movies-load-more');
       const tvLoadMore = document.getElementById('tvshows-load-more');
+      const genreLoadMore = document.getElementById('genre-results-load-more');
       if (!('IntersectionObserver' in window)) {
-        // If browser doesn't support IntersectionObserver, leave manual buttons visible
-        if (document.getElementById('movies-more-btn')) document.getElementById('movies-more-btn').style.display = 'block';
-        if (document.getElementById('tv-more-btn')) document.getElementById('tv-more-btn').style.display = 'block';
+        setupScrollLazyLoadFallback();
         return;
       }
 
-      const options = { root: null, rootMargin: '400px', threshold: 0 };
+      const options = { root: null, rootMargin: '600px', threshold: 0 };
       movieObserver = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            // only attempt to load if we haven't reached known total pages
             if (moviePageNum < movieTotalPages) loadMoreMovies().catch(() => { });
           }
         });
@@ -3219,8 +3352,17 @@
         });
       }, options);
 
-      if (moviesLoadMore) { moviesLoadMore.style.display = 'none'; movieObserver.observe(moviesLoadMore); }
-      if (tvLoadMore) { tvLoadMore.style.display = 'none'; tvObserver.observe(tvLoadMore); }
+      genreObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (genrePage < genreTotalPages) loadMoreGenreResults().catch(() => { });
+          }
+        });
+      }, options);
+
+      if (moviesLoadMore) movieObserver.observe(moviesLoadMore);
+      if (tvLoadMore) tvObserver.observe(tvLoadMore);
+      if (genreLoadMore) genreObserver.observe(genreLoadMore);
     }
     document.addEventListener('DOMContentLoaded', () => {
       loadSettings();
