@@ -318,6 +318,7 @@
       margin-bottom: 24px;
       display: -webkit-box;
       -webkit-line-clamp: 3;
+      line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
@@ -608,6 +609,344 @@
       background: var(--accent-grad);
       border-color: transparent;
       color: #fff;
+    }
+
+    .advanced-filters {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px 20px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      grid-auto-rows: minmax(100px, auto);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .year-range-picker {
+      grid-column: span 1;
+      grid-row: span 2;
+    }
+
+    @media (max-width: 1000px) {
+      .advanced-filters {
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
+      }
+
+      .year-range-picker {
+        grid-column: span 2;
+        grid-row: auto;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .advanced-filters {
+        grid-template-columns: 1fr;
+      }
+
+      .year-range-picker {
+        grid-column: span 1;
+      }
+    }
+
+    .filter-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .filter-field label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .filter-input,
+    .filter-select {
+      width: 100%;
+      padding: 9px 11px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.86rem;
+      outline: none;
+    }
+
+    .filter-input:focus,
+    .filter-select:focus {
+      border-color: var(--accent-1);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
+
+    .range-filter-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .range-filter-value {
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .range-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .filter-range {
+      width: 100%;
+      accent-color: var(--accent-1);
+    }
+
+    .year-range-picker .filter-range {
+      accent-color: var(--accent-2);
+    }
+
+    .minmax-picker .filter-range {
+      accent-color: var(--accent-1);
+    }
+
+    .range-filter.active {
+      border-color: rgba(124, 58, 237, 0.4);
+      box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.12);
+    }
+
+    .range-filter-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .range-reset-btn {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .range-reset-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      border-color: var(--accent-1);
+    }
+
+    .range-inputs {
+      position: relative;
+      min-height: 54px;
+    }
+
+    .range-track-highlight {
+      position: absolute;
+      left: var(--range-min-percent, 0%);
+      right: calc(100% - var(--range-max-percent, 100%));
+      top: 22px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(124, 58, 237, 0.95), rgba(219, 39, 119, 0.95));
+      pointer-events: none;
+    }
+
+    .range-tooltip {
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+      background: rgba(15, 15, 30, 0.95);
+      color: #fff;
+      font-size: 0.72rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .range-tooltip-min { left: var(--range-min-percent, 0%); }
+    .range-tooltip-max { left: var(--range-max-percent, 100%); }
+
+    .filter-range {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 54px;
+      background: transparent;
+      -webkit-appearance: none;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .filter-range::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .filter-range::-moz-range-track {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .filter-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-1);
+      border: 3px solid rgba(0, 0, 0, 0.35);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      margin-top: -6px;
+    }
+
+    .filter-range::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-1);
+      border: 3px solid rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+    }
+
+    .year-range-picker .year-picker-control {
+      position: relative;
+      margin-top: 12px;
+    }
+
+    .year-picker-toggle {
+      width: 100%;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.88rem;
+    }
+
+    .year-picker-toggle:hover {
+      border-color: var(--accent-1);
+    }
+
+    .year-picker-menu {
+      position: absolute;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      margin-top: 10px;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(8, 8, 16, 0.97);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+    }
+
+    .year-picker-menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .year-picker-values {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      width: 100%;
+    }
+
+    .year-picker-selected {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .year-picker-selected.active {
+      border-color: var(--accent-1);
+      color: var(--text-primary);
+      background: rgba(124, 58, 237, 0.12);
+    }
+
+    .year-picker-selected strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .year-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      max-height: 260px;
+      overflow: auto;
+      padding-right: 4px;
+      margin-bottom: 12px;
+    }
+
+    .year-picker-cell {
+      padding: 10px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: var(--bg-elevated);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .year-picker-cell:hover {
+      border-color: var(--accent-1);
+      color: var(--text-primary);
+      background: rgba(124, 58, 237, 0.08);
+    }
+
+    .year-picker-cell.active,
+    .year-picker-cell.in-range {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(219, 39, 119, 0.18));
+      color: #fff;
+      border-color: rgba(124, 58, 237, 0.6);
+    }
+
+    .year-picker-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .year-picker-menu-close {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    .year-picker-menu-close:hover {
+      color: var(--text-primary);
     }
 
     /* ==================== GENRE PAGE ==================== */
@@ -1819,8 +2158,103 @@
             <div class="section-accent"></div>Movies
           </div>
         </div>
-        <div class="filter-pills" style="padding: 0 24px 20px; max-width:1400px; margin:0 auto"
-          id="movie-genre-filters"></div>
+        <div class="advanced-filters" id="movie-advanced-filters">
+          <div class="filter-field range-filter year-range-picker" data-range-filter data-range-kind="year" data-min-id="movie-release-year-min" data-max-id="movie-release-year-max">
+            <div class="range-filter-head">
+              <div>
+                <label for="movie-release-year-min">Release year</label>
+                <span class="range-filter-value" data-range-label>Any years</span>
+              </div>
+              <div class="range-filter-actions">
+                <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+              </div>
+            </div>
+            <div class="year-picker-control">
+              <button type="button" class="year-picker-toggle" aria-haspopup="true" aria-expanded="false">
+                <span class="year-picker-label">Select years</span>
+                <span class="year-picker-caret">▾</span>
+              </button>
+              <div class="year-picker-menu" data-year-picker-menu hidden>
+                <div class="year-picker-menu-header">
+                  <div class="year-picker-values">
+                    <button type="button" class="year-picker-selected active" data-year-target="min">
+                      <span>From</span>
+                      <strong class="year-picker-selected-value"></strong>
+                    </button>
+                    <button type="button" class="year-picker-selected" data-year-target="max">
+                      <span>To</span>
+                      <strong class="year-picker-selected-value"></strong>
+                    </button>
+                  </div>
+                  <button type="button" class="year-picker-menu-close" aria-label="Close">×</button>
+                </div>
+                <div class="year-picker-grid" role="grid" aria-label="Year selection"></div>
+                <div class="year-picker-actions">
+                  <button type="button" class="btn-secondary year-picker-reset" data-range-reset>Reset</button>
+                </div>
+              </div>
+            </div>
+            <div class="range-inputs">
+              <div class="range-track-highlight"></div>
+              <div class="range-tooltip range-tooltip-min"></div>
+              <div class="range-tooltip range-tooltip-max"></div>
+              <input class="filter-range" id="movie-release-year-min" type="range" min="1900" max="2030" step="1" value="1900" data-default-value="1900" aria-label="Minimum movie release year">
+              <input class="filter-range" id="movie-release-year-max" type="range" min="1900" max="2030" step="1" value="2030" data-default-value="2030" aria-label="Maximum movie release year">
+            </div>
+          </div>
+          <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax" data-min-id="movie-rating-min" data-max-id="movie-rating-max">
+            <div class="range-filter-head">
+              <div>
+                <label for="movie-rating-min">Rating</label>
+                <span class="range-filter-value" data-range-label>Any</span>
+              </div>
+              <div class="range-filter-actions">
+                <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+              </div>
+            </div>
+            <div class="range-inputs">
+              <div class="range-track-highlight"></div>
+              <div class="range-tooltip range-tooltip-min"></div>
+              <div class="range-tooltip range-tooltip-max"></div>
+              <input class="filter-range" id="movie-rating-min" type="range" min="0" max="10" step="0.1" value="0" data-default-value="0" aria-label="Minimum movie rating">
+              <input class="filter-range" id="movie-rating-max" type="range" min="0" max="10" step="0.1" value="10" data-default-value="10" aria-label="Maximum movie rating">
+            </div>
+          </div>
+          <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax" data-min-id="movie-vote-min" data-max-id="movie-vote-max">
+            <div class="range-filter-head">
+              <div>
+                <label for="movie-vote-min">Vote count</label>
+                <span class="range-filter-value" data-range-label>Any</span>
+              </div>
+              <div class="range-filter-actions">
+                <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+              </div>
+            </div>
+            <div class="range-inputs">
+              <div class="range-track-highlight"></div>
+              <div class="range-tooltip range-tooltip-min"></div>
+              <div class="range-tooltip range-tooltip-max"></div>
+              <input class="filter-range" id="movie-vote-min" type="range" min="0" max="10000" step="50" value="0" data-default-value="0" aria-label="Minimum movie vote count">
+              <input class="filter-range" id="movie-vote-max" type="range" min="0" max="10000" step="50" value="10000" data-default-value="10000" aria-label="Maximum movie vote count">
+            </div>
+          </div>
+          <div class="filter-field">
+            <label for="movie-language-filter">Original language</label>
+            <select class="filter-select" id="movie-language-filter"></select>
+          </div>
+          <div class="filter-field">
+            <label for="movie-country-filter">Country</label>
+            <select class="filter-select" id="movie-country-filter"></select>
+          </div>
+          <div class="filter-field">
+            <label for="movie-provider-filter">Provider</label>
+            <select class="filter-select" id="movie-provider-filter"></select>
+          </div>
+          <div class="filter-field">
+            <label for="movie-genre-filter">Genre</label>
+            <select class="filter-select" id="movie-genre-filter"></select>
+          </div>
+        </div>
         <div class="media-grid" id="movies-grid"></div>
         <div class="lazy-load-sentinel" style="padding: 20px" id="movies-load-more" aria-hidden="true"></div>
       </div>
@@ -1834,7 +2268,96 @@
             <div class="section-accent"></div>TV Shows
           </div>
         </div>
-        <div class="filter-pills" style="padding: 0 24px 20px; max-width:1400px; margin:0 auto" id="tv-genre-filters">
+        <div class="advanced-filters" id="tv-advanced-filters">
+          <div class="filter-field range-filter year-range-picker" data-range-filter data-range-kind="year" data-min-id="tv-first-air-year-min" data-max-id="tv-first-air-year-max">
+            <div class="range-filter-head">
+              <div>
+                <label for="tv-first-air-year-min">First air year</label>
+                <span class="range-filter-value" data-range-label>Any years</span>
+              </div>
+              <div class="range-filter-actions">
+                <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+              </div>
+            </div>
+            <div class="year-picker-control">
+              <button type="button" class="year-picker-toggle" aria-haspopup="true" aria-expanded="false">
+                <span class="year-picker-label">Select years</span>
+                <span class="year-picker-caret">▾</span>
+              </button>
+              <div class="year-picker-menu" data-year-picker-menu hidden>
+                <div class="year-picker-menu-header">
+                  <div class="year-picker-values">
+                    <button type="button" class="year-picker-selected active" data-year-target="min">
+                      <span>From</span>
+                      <strong class="year-picker-selected-value"></strong>
+                    </button>
+                    <button type="button" class="year-picker-selected" data-year-target="max">
+                      <span>To</span>
+                      <strong class="year-picker-selected-value"></strong>
+                    </button>
+                  </div>
+                  <button type="button" class="year-picker-menu-close" aria-label="Close">×</button>
+                </div>
+                <div class="year-picker-grid" role="grid" aria-label="Year selection"></div>
+                <div class="year-picker-actions">
+                  <button type="button" class="btn-secondary year-picker-reset" data-range-reset>Reset</button>
+                </div>
+              </div>
+            </div>
+            <div class="range-inputs">
+              <div class="range-track-highlight"></div>
+              <div class="range-tooltip range-tooltip-min"></div>
+              <div class="range-tooltip range-tooltip-max"></div>
+              <input class="filter-range" id="tv-first-air-year-min" type="range" min="1900" max="2030" step="1" value="1900" data-default-value="1900" aria-label="Minimum first air year">
+              <input class="filter-range" id="tv-first-air-year-max" type="range" min="1900" max="2030" step="1" value="2030" data-default-value="2030" aria-label="Maximum first air year">
+            </div>
+          </div>
+          <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax" data-min-id="tv-vote-min" data-max-id="tv-vote-max">
+            <div class="range-filter-head">
+              <div>
+                <label for="tv-vote-min">Vote count</label>
+                <span class="range-filter-value" data-range-label>Any</span>
+              </div>
+              <div class="range-filter-actions">
+                <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+              </div>
+            </div>
+            <div class="range-inputs">
+              <div class="range-track-highlight"></div>
+              <div class="range-tooltip range-tooltip-min"></div>
+              <div class="range-tooltip range-tooltip-max"></div>
+              <input class="filter-range" id="tv-vote-min" type="range" min="0" max="10000" step="50" value="0" data-default-value="0" aria-label="Minimum TV vote count">
+              <input class="filter-range" id="tv-vote-max" type="range" min="0" max="10000" step="50" value="10000" data-default-value="10000" aria-label="Maximum TV vote count">
+            </div>
+          </div>
+          <div class="filter-field">
+            <label for="tv-status-filter">Status</label>
+            <select class="filter-select" id="tv-status-filter">
+              <option value="">Any</option>
+              <option value="0">Returning Series</option>
+              <option value="1">Planned</option>
+              <option value="2">In Production</option>
+              <option value="3">Ended</option>
+              <option value="4">Canceled</option>
+              <option value="5">Pilot</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label for="tv-language-filter">Original language</label>
+            <select class="filter-select" id="tv-language-filter"></select>
+          </div>
+          <div class="filter-field">
+            <label for="tv-country-filter">Country</label>
+            <select class="filter-select" id="tv-country-filter"></select>
+          </div>
+          <div class="filter-field">
+            <label for="tv-provider-filter">Provider</label>
+            <select class="filter-select" id="tv-provider-filter"></select>
+          </div>
+          <div class="filter-field">
+            <label for="tv-genre-filter">Genre</label>
+            <select class="filter-select" id="tv-genre-filter"></select>
+          </div>
         </div>
         <div class="media-grid" id="tvshows-grid"></div>
         <div class="lazy-load-sentinel" style="padding: 20px" id="tvshows-load-more" aria-hidden="true"></div>
@@ -2092,6 +2615,10 @@
 
     let movieGenres = [];
     let tvGenres = [];
+    let movieWatchProviders = [];
+    let tvWatchProviders = [];
+    let filterCountries = [];
+    let filterLanguages = [];
     let currentMovieGenre = null;
     let currentTVGenre = null;
     let moviePage = 1;
@@ -2182,7 +2709,9 @@
     async function tmdb(path, params = {}) {
       const url = new URL(TMDB_BASE + path);
       url.searchParams.set('api_key', getApiKey());
-      for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
+      for (const [k, v] of Object.entries(params)) {
+        if (v !== null && v !== undefined && v !== '') url.searchParams.set(k, v);
+      }
       const res = await fetch(url.toString(), {
         headers: { Authorization: `Bearer ${DEFAULT_READ_TOKEN}` }
       });
@@ -2447,12 +2976,27 @@
     async function initHome() {
       try {
         // Load genres
-        const [movieGenreData, tvGenreData] = await Promise.all([
+        const [
+          movieGenreData,
+          tvGenreData,
+          movieProviderData,
+          tvProviderData,
+          countryData,
+          languageData
+        ] = await Promise.all([
           tmdb('/genre/movie/list'),
-          tmdb('/genre/tv/list')
+          tmdb('/genre/tv/list'),
+          tmdb('/watch/providers/movie').catch(() => ({ results: [] })),
+          tmdb('/watch/providers/tv').catch(() => ({ results: [] })),
+          tmdb('/configuration/countries').catch(() => []),
+          tmdb('/configuration/languages').catch(() => [])
         ]);
         movieGenres = movieGenreData.genres || [];
         tvGenres = tvGenreData.genres || [];
+        movieWatchProviders = movieProviderData.results || [];
+        tvWatchProviders = tvProviderData.results || [];
+        filterCountries = countryData || [];
+        filterLanguages = languageData || [];
 
         // Load all rows in parallel
         await Promise.all([
@@ -2521,6 +3065,367 @@
       renderCards(rowId, items);
     }
 
+    // ==================== DISCOVER FILTERS ====================
+    const FALLBACK_COUNTRIES = [
+      { iso_3166_1: 'US', english_name: 'United States' },
+      { iso_3166_1: 'GB', english_name: 'United Kingdom' },
+      { iso_3166_1: 'KR', english_name: 'South Korea' },
+      { iso_3166_1: 'JP', english_name: 'Japan' },
+      { iso_3166_1: 'FR', english_name: 'France' },
+      { iso_3166_1: 'DE', english_name: 'Germany' },
+      { iso_3166_1: 'IN', english_name: 'India' }
+    ];
+    const FALLBACK_LANGUAGES = [
+      { iso_639_1: 'en', english_name: 'English' },
+      { iso_639_1: 'es', english_name: 'Spanish' },
+      { iso_639_1: 'fr', english_name: 'French' },
+      { iso_639_1: 'de', english_name: 'German' },
+      { iso_639_1: 'ja', english_name: 'Japanese' },
+      { iso_639_1: 'ko', english_name: 'Korean' },
+      { iso_639_1: 'zh', english_name: 'Chinese' }
+    ];
+    const FALLBACK_PROVIDERS = [
+      { provider_id: 8, provider_name: 'Netflix' },
+      { provider_id: 337, provider_name: 'Disney Plus' },
+      { provider_id: 9, provider_name: 'Amazon Prime Video' },
+      { provider_id: 15, provider_name: 'Hulu' },
+      { provider_id: 350, provider_name: 'Apple TV Plus' },
+      { provider_id: 1899, provider_name: 'Max' }
+    ];
+
+    function filterValue(id) {
+      const el = document.getElementById(id);
+      if (!el) return '';
+      const value = el.value.trim();
+      return el.dataset.defaultValue === value ? '' : value;
+    }
+
+    function addRangeParams(params, key, minValue, maxValue) {
+      if (minValue !== '') params[`${key}.gte`] = minValue;
+      if (maxValue !== '') params[`${key}.lte`] = maxValue;
+    }
+
+    function addYearDateRangeParams(params, key, minYear, maxYear) {
+      if (minYear !== '') params[`${key}.gte`] = `${minYear}-01-01`;
+      if (maxYear !== '') params[`${key}.lte`] = `${maxYear}-12-31`;
+    }
+
+    function renderSelectOptions(selectId, items, valueKey, labelKey, placeholder = 'Any') {
+      const select = document.getElementById(selectId);
+      if (!select) return;
+      const currentValue = select.value;
+      const options = [`<option value="">${placeholder}</option>`]
+        .concat(items
+          .filter(item => item && item[valueKey] && item[labelKey])
+          .map(item => `<option value="${escHtml(String(item[valueKey]))}">${escHtml(String(item[labelKey]))}</option>`));
+      select.innerHTML = options.join('');
+      if (currentValue) select.value = currentValue;
+    }
+
+    function renderAdvancedFilterOptions() {
+      const countries = (filterCountries.length ? filterCountries : FALLBACK_COUNTRIES)
+        .map(c => ({ code: c.iso_3166_1, name: c.english_name || c.native_name || c.iso_3166_1 }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+      const languages = (filterLanguages.length ? filterLanguages : FALLBACK_LANGUAGES)
+        .map(l => ({ code: l.iso_639_1, name: l.english_name || l.name || l.iso_639_1 }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+      const movieProviders = (movieWatchProviders.length ? movieWatchProviders : FALLBACK_PROVIDERS)
+        .slice()
+        .sort((a, b) => (a.display_priority ?? 999) - (b.display_priority ?? 999) || a.provider_name.localeCompare(b.provider_name));
+      const tvProviders = (tvWatchProviders.length ? tvWatchProviders : FALLBACK_PROVIDERS)
+        .slice()
+        .sort((a, b) => (a.display_priority ?? 999) - (b.display_priority ?? 999) || a.provider_name.localeCompare(b.provider_name));
+
+      renderSelectOptions('movie-language-filter', languages, 'code', 'name');
+      renderSelectOptions('tv-language-filter', languages, 'code', 'name');
+      renderSelectOptions('movie-country-filter', countries, 'code', 'name');
+      renderSelectOptions('tv-country-filter', countries, 'code', 'name');
+      renderSelectOptions('movie-provider-filter', movieProviders, 'provider_id', 'provider_name');
+      renderSelectOptions('tv-provider-filter', tvProviders, 'provider_id', 'provider_name');
+      renderSelectOptions('movie-genre-filter', movieGenres, 'id', 'name', 'Any genre');
+      renderSelectOptions('tv-genre-filter', tvGenres, 'id', 'name', 'Any genre');
+    }
+
+    function bindAdvancedFilters() {
+      document.querySelectorAll('#movie-advanced-filters input, #movie-advanced-filters select').forEach(el => {
+        if (el.dataset.boundFilter) return;
+        el.dataset.boundFilter = '1';
+        el.addEventListener('change', () => applyMovieFilters());
+      });
+      document.querySelectorAll('#tv-advanced-filters input, #tv-advanced-filters select').forEach(el => {
+        if (el.dataset.boundFilter) return;
+        el.dataset.boundFilter = '1';
+        el.addEventListener('change', () => applyTVFilters());
+      });
+      bindRangeFilters();
+      initYearRangePickers();
+    }
+
+    function calculateRangePercent(value, min, max) {
+      const parsedMin = Number(min);
+      const parsedMax = Number(max);
+      if (!Number.isFinite(parsedMin) || !Number.isFinite(parsedMax) || parsedMax <= parsedMin) return 0;
+      return ((Number(value) - parsedMin) / (parsedMax - parsedMin)) * 100;
+    }
+
+    function updateYearPickerGridState(group, selectedMin, selectedMax) {
+      const cells = group.querySelectorAll('[data-year-cell]');
+      cells.forEach(cell => {
+        const year = Number(cell.dataset.year);
+        cell.classList.toggle('active', year === selectedMin || year === selectedMax);
+        cell.classList.toggle('in-range', year > selectedMin && year < selectedMax);
+      });
+
+      const minBadge = group.querySelector('[data-year-target="min"] .year-picker-selected-value');
+      const maxBadge = group.querySelector('[data-year-target="max"] .year-picker-selected-value');
+      if (minBadge) minBadge.textContent = String(selectedMin);
+      if (maxBadge) maxBadge.textContent = String(selectedMax);
+    }
+
+    function bindRangeFilters() {
+      document.querySelectorAll('[data-range-filter]').forEach(group => {
+        const minInput = document.getElementById(group.dataset.minId);
+        const maxInput = document.getElementById(group.dataset.maxId);
+        const label = group.querySelector('[data-range-label]');
+        const resetButton = group.querySelector('[data-range-reset]');
+        if (!minInput || !maxInput || !label) return;
+
+        const updateRange = changedInput => {
+          let minValue = Number(minInput.value);
+          let maxValue = Number(maxInput.value);
+          if (minValue > maxValue) {
+            if (changedInput === minInput) {
+              maxInput.value = minInput.value;
+              maxValue = minValue;
+            } else {
+              minInput.value = maxInput.value;
+              minValue = maxValue;
+            }
+          }
+
+          const minDefault = minInput.dataset.defaultValue;
+          const maxDefault = maxInput.dataset.defaultValue;
+          const isDefault = minInput.value === minDefault && maxInput.value === maxDefault;
+
+          if (group.classList.contains('year-range-picker')) {
+            label.textContent = isDefault ? 'Any years' : `${minInput.value} - ${maxInput.value}`;
+          } else {
+            label.textContent = isDefault ? 'Any' : `${minInput.value} - ${maxInput.value}`;
+          }
+
+          group.classList.toggle('active', !isDefault);
+
+          const minPercent = calculateRangePercent(minValue, minInput.min, maxInput.max);
+          const maxPercent = calculateRangePercent(maxValue, minInput.min, maxInput.max);
+          group.style.setProperty('--range-min-percent', `${minPercent}%`);
+          group.style.setProperty('--range-max-percent', `${maxPercent}%`);
+
+          const tooltipMin = group.querySelector('.range-tooltip-min');
+          const tooltipMax = group.querySelector('.range-tooltip-max');
+          if (tooltipMin) tooltipMin.textContent = String(minInput.value);
+          if (tooltipMax) tooltipMax.textContent = String(maxInput.value);
+
+          if (group.classList.contains('year-range-picker')) {
+            const toggleLabel = group.querySelector('.year-picker-label');
+            if (toggleLabel) toggleLabel.textContent = `${minInput.value} — ${maxInput.value}`;
+            updateYearPickerGridState(group, minValue, maxValue);
+          }
+        };
+
+        const resetRange = () => {
+          minInput.value = minInput.dataset.defaultValue;
+          maxInput.value = maxInput.dataset.defaultValue;
+          updateRange(null);
+          minInput.dispatchEvent(new Event('input', { bubbles: true }));
+          maxInput.dispatchEvent(new Event('input', { bubbles: true }));
+          minInput.dispatchEvent(new Event('change', { bubbles: true }));
+          maxInput.dispatchEvent(new Event('change', { bubbles: true }));
+        };
+
+        if (!group.dataset.boundRange) {
+          group.dataset.boundRange = '1';
+          minInput.addEventListener('input', () => updateRange(minInput));
+          maxInput.addEventListener('input', () => updateRange(maxInput));
+          if (resetButton) resetButton.addEventListener('click', resetRange);
+        }
+
+        updateRange(null);
+      });
+    }
+
+    function initYearRangePickers() {
+      document.querySelectorAll('.year-range-picker').forEach(group => {
+        if (group.dataset.yearPickerInit) return;
+        group.dataset.yearPickerInit = '1';
+
+        const minInput = document.getElementById(group.dataset.minId);
+        const maxInput = document.getElementById(group.dataset.maxId);
+        const toggleButton = group.querySelector('.year-picker-toggle');
+        const menu = group.querySelector('[data-year-picker-menu]');
+        const grid = group.querySelector('.year-picker-grid');
+        const startToggle = group.querySelector('[data-year-target="min"]');
+        const endToggle = group.querySelector('[data-year-target="max"]');
+        const closeButton = group.querySelector('.year-picker-menu-close');
+        const yearReset = group.querySelector('.year-picker-reset');
+        if (!minInput || !maxInput || !toggleButton || !menu || !grid || !startToggle || !endToggle || !closeButton) return;
+
+        const minYear = Number(minInput.min || 1900);
+        const maxYear = Number(maxInput.max || new Date().getFullYear());
+        let activeTarget = 'min';
+
+        const renderYearGrid = () => {
+          const fragment = document.createDocumentFragment();
+          for (let year = minYear; year <= maxYear; year += 1) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'year-picker-cell';
+            button.dataset.yearCell = '';
+            button.dataset.year = String(year);
+            button.textContent = String(year);
+            button.addEventListener('keydown', handleYearCellKeydown);
+            fragment.appendChild(button);
+          }
+          grid.appendChild(fragment);
+          grid.dataset.gridInitialized = '1';
+        };
+
+        const setActiveTarget = target => {
+          activeTarget = target;
+          startToggle.classList.toggle('active', target === 'min');
+          endToggle.classList.toggle('active', target === 'max');
+        };
+
+        const updatePickerState = () => {
+          const selectedMin = Number(minInput.value);
+          const selectedMax = Number(maxInput.value);
+          updateYearPickerGridState(group, selectedMin, selectedMax);
+          setActiveTarget(activeTarget);
+        };
+
+        const openPicker = () => {
+          menu.hidden = false;
+          toggleButton.setAttribute('aria-expanded', 'true');
+          grid.querySelector('[data-year-cell]')?.focus();
+        };
+
+        const closePicker = () => {
+          menu.hidden = true;
+          toggleButton.setAttribute('aria-expanded', 'false');
+        };
+
+        const selectYear = year => {
+          if (activeTarget === 'min') {
+            minInput.value = year;
+            if (Number(maxInput.value) < year) maxInput.value = String(year);
+          } else {
+            maxInput.value = year;
+            if (Number(minInput.value) > year) minInput.value = String(year);
+          }
+          minInput.dispatchEvent(new Event('input', { bubbles: true }));
+          maxInput.dispatchEvent(new Event('input', { bubbles: true }));
+          minInput.dispatchEvent(new Event('change', { bubbles: true }));
+          maxInput.dispatchEvent(new Event('change', { bubbles: true }));
+          updatePickerState();
+        };
+
+        function handleYearCellKeydown(event) {
+          const cell = event.currentTarget;
+          const allCells = Array.from(grid.querySelectorAll('[data-year-cell]'));
+          const index = allCells.indexOf(cell);
+          if (index === -1) return;
+          if (event.key === 'ArrowRight') {
+            allCells[index + 1]?.focus();
+            event.preventDefault();
+          } else if (event.key === 'ArrowLeft') {
+            allCells[index - 1]?.focus();
+            event.preventDefault();
+          } else if (event.key === 'ArrowDown') {
+            allCells[index + 6]?.focus();
+            event.preventDefault();
+          } else if (event.key === 'ArrowUp') {
+            allCells[index - 6]?.focus();
+            event.preventDefault();
+          } else if (event.key === 'Enter' || event.key === ' ') {
+            selectYear(Number(cell.dataset.year));
+            event.preventDefault();
+          }
+        }
+
+        toggleButton.addEventListener('click', event => {
+          event.stopPropagation();
+          menu.hidden ? openPicker() : closePicker();
+        });
+
+        toggleButton.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowDown') {
+            event.preventDefault();
+            openPicker();
+          }
+        });
+
+        startToggle.addEventListener('click', () => setActiveTarget('min'));
+        endToggle.addEventListener('click', () => setActiveTarget('max'));
+        closeButton.addEventListener('click', event => {
+          event.stopPropagation();
+          closePicker();
+        });
+
+        yearReset?.addEventListener('click', event => {
+          event.stopPropagation();
+          minInput.value = minInput.dataset.defaultValue;
+          maxInput.value = maxInput.dataset.defaultValue;
+          minInput.dispatchEvent(new Event('input', { bubbles: true }));
+          maxInput.dispatchEvent(new Event('input', { bubbles: true }));
+          minInput.dispatchEvent(new Event('change', { bubbles: true }));
+          maxInput.dispatchEvent(new Event('change', { bubbles: true }));
+          updatePickerState();
+        });
+
+        document.addEventListener('click', event => {
+          if (!group.contains(event.target)) closePicker();
+        });
+
+        renderYearGrid();
+        updatePickerState();
+      });
+    }
+
+    function buildMovieDiscoverParams(page) {
+      const params = { page, sort_by: 'popularity.desc' };
+      const country = filterValue('movie-country-filter');
+      const provider = filterValue('movie-provider-filter');
+      const movieGenre = filterValue('movie-genre-filter');
+      if (movieGenre) params.with_genres = movieGenre;
+      if (filterValue('movie-language-filter')) params.with_original_language = filterValue('movie-language-filter');
+      if (country) params.with_origin_country = country;
+      addYearDateRangeParams(params, 'primary_release_date', filterValue('movie-release-year-min'), filterValue('movie-release-year-max'));
+      addRangeParams(params, 'vote_average', filterValue('movie-rating-min'), filterValue('movie-rating-max'));
+      addRangeParams(params, 'vote_count', filterValue('movie-vote-min'), filterValue('movie-vote-max'));
+      if (provider) {
+        params.with_watch_providers = provider;
+        params.watch_region = country || 'US';
+      }
+      return params;
+    }
+
+    function buildTVDiscoverParams(page) {
+      const params = { page, sort_by: 'popularity.desc' };
+      const country = filterValue('tv-country-filter');
+      const provider = filterValue('tv-provider-filter');
+      const tvGenre = filterValue('tv-genre-filter');
+      if (tvGenre) params.with_genres = tvGenre;
+      if (filterValue('tv-language-filter')) params.with_original_language = filterValue('tv-language-filter');
+      if (country) params.with_origin_country = country;
+      addYearDateRangeParams(params, 'first_air_date', filterValue('tv-first-air-year-min'), filterValue('tv-first-air-year-max'));
+      addRangeParams(params, 'vote_count', filterValue('tv-vote-min'), filterValue('tv-vote-max'));
+      if (provider) {
+        params.with_watch_providers = provider;
+        params.watch_region = country || 'US';
+      }
+      if (filterValue('tv-status-filter')) params.with_status = filterValue('tv-status-filter');
+      return params;
+    }
+
     // ==================== HISTORY RENDER ====================
     function renderHistory() {
       const history = getHistory();
@@ -2548,17 +3453,16 @@
 
     // ==================== MOVIES PAGE ====================
     moviePageNum = 1;
-    let movieGenreFilter = null;
 
     async function loadMoviesPage() {
       moviePageNum = 1;
-      movieGenreFilter = null;
       movieTotalPages = 1;
       movieLoading = true;
       updateLazySentinel('movies-load-more', false);
-      renderMovieGenreFilters();
+      renderAdvancedFilterOptions();
+      bindAdvancedFilters();
       try {
-        const data = await tmdb('/movie/popular', { page: 1 });
+        const data = await tmdb('/discover/movie', buildMovieDiscoverParams(1));
         movieTotalPages = data.total_pages || 1;
         renderCards('movies-grid', (data.results || []).map(i => ({ ...i, media_type: 'movie' })));
       } finally {
@@ -2567,31 +3471,13 @@
       }
     }
 
-    function renderMovieGenreFilters() {
-      const el = document.getElementById('movie-genre-filters');
-      if (!el) return;
-      el.innerHTML = `<button class="filter-pill active" onclick="filterMoviesByGenre(null, this)">All</button>`;
-      movieGenres.forEach(g => {
-        const btn = document.createElement('button');
-        btn.className = 'filter-pill';
-        btn.textContent = g.name;
-        btn.onclick = () => filterMoviesByGenre(g.id, btn);
-        el.appendChild(btn);
-      });
-    }
-
-    async function filterMoviesByGenre(genreId, btn) {
-      document.querySelectorAll('#movie-genre-filters .filter-pill').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      movieGenreFilter = genreId;
+    async function applyMovieFilters() {
       moviePageNum = 1;
       movieTotalPages = 1;
       movieLoading = true;
       updateLazySentinel('movies-load-more', false);
-      const params = { page: 1, sort_by: 'popularity.desc' };
-      if (genreId) params.with_genres = genreId;
       try {
-        const data = await tmdb(genreId ? '/discover/movie' : '/movie/popular', params);
+        const data = await tmdb('/discover/movie', buildMovieDiscoverParams(1));
         movieTotalPages = data.total_pages || 1;
         renderCards('movies-grid', (data.results || []).map(i => ({ ...i, media_type: 'movie' })));
       } finally {
@@ -2605,10 +3491,7 @@
       movieLoading = true;
       moviePageNum++;
       try {
-        const params = { page: moviePageNum, sort_by: 'popularity.desc' };
-        if (movieGenreFilter) params.with_genres = movieGenreFilter;
-        const path = movieGenreFilter ? '/discover/movie' : '/movie/popular';
-        const data = await tmdb(path, params);
+        const data = await tmdb('/discover/movie', buildMovieDiscoverParams(moviePageNum));
         movieTotalPages = data.total_pages || movieTotalPages;
         renderCards('movies-grid', (data.results || []).map(i => ({ ...i, media_type: 'movie' })), false);
       } catch (e) {
@@ -2622,17 +3505,16 @@
 
     // ==================== TV PAGE ====================
     tvPageNum = 1;
-    let tvGenreFilter = null;
 
     async function loadTVPage() {
       tvPageNum = 1;
-      tvGenreFilter = null;
       tvTotalPages = 1;
       tvLoading = true;
       updateLazySentinel('tvshows-load-more', false);
-      renderTVGenreFilters();
+      renderAdvancedFilterOptions();
+      bindAdvancedFilters();
       try {
-        const data = await tmdb('/tv/popular', { page: 1 });
+        const data = await tmdb('/discover/tv', buildTVDiscoverParams(1));
         tvTotalPages = data.total_pages || 1;
         renderCards('tvshows-grid', (data.results || []).map(i => ({ ...i, media_type: 'tv' })));
       } finally {
@@ -2641,31 +3523,13 @@
       }
     }
 
-    function renderTVGenreFilters() {
-      const el = document.getElementById('tv-genre-filters');
-      if (!el) return;
-      el.innerHTML = `<button class="filter-pill active" onclick="filterTVByGenre(null, this)">All</button>`;
-      tvGenres.forEach(g => {
-        const btn = document.createElement('button');
-        btn.className = 'filter-pill';
-        btn.textContent = g.name;
-        btn.onclick = () => filterTVByGenre(g.id, btn);
-        el.appendChild(btn);
-      });
-    }
-
-    async function filterTVByGenre(genreId, btn) {
-      document.querySelectorAll('#tv-genre-filters .filter-pill').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      tvGenreFilter = genreId;
+    async function applyTVFilters() {
       tvPageNum = 1;
       tvTotalPages = 1;
       tvLoading = true;
       updateLazySentinel('tvshows-load-more', false);
-      const params = { page: 1, sort_by: 'popularity.desc' };
-      if (genreId) params.with_genres = genreId;
       try {
-        const data = await tmdb(genreId ? '/discover/tv' : '/tv/popular', params);
+        const data = await tmdb('/discover/tv', buildTVDiscoverParams(1));
         tvTotalPages = data.total_pages || 1;
         renderCards('tvshows-grid', (data.results || []).map(i => ({ ...i, media_type: 'tv' })));
       } finally {
@@ -2679,10 +3543,7 @@
       tvLoading = true;
       tvPageNum++;
       try {
-        const params = { page: tvPageNum, sort_by: 'popularity.desc' };
-        if (tvGenreFilter) params.with_genres = tvGenreFilter;
-        const path = tvGenreFilter ? '/discover/tv' : '/tv/popular';
-        const data = await tmdb(path, params);
+        const data = await tmdb('/discover/tv', buildTVDiscoverParams(tvPageNum));
         tvTotalPages = data.total_pages || tvTotalPages;
         renderCards('tvshows-grid', (data.results || []).map(i => ({ ...i, media_type: 'tv' })), false);
       } catch (e) {
