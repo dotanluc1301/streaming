@@ -328,6 +328,38 @@
       gap: 12px;
     }
 
+    /* Hero nav buttons */
+    .hero-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 3;
+      backdrop-filter: blur(6px);
+      transition: var(--transition);
+    }
+
+    .hero-nav-btn:hover {
+      background: rgba(124, 58, 237, 0.9);
+    }
+
+    .hero-nav-left {
+      left: 12px;
+    }
+
+    .hero-nav-right {
+      right: 12px;
+    }
+
     .btn-primary {
       display: inline-flex;
       align-items: center;
@@ -373,6 +405,7 @@
 
     /* ==================== CONTENT SECTIONS ==================== */
     .section {
+      position: relative;
       padding: 32px 0 12px;
     }
 
@@ -426,6 +459,62 @@
       scrollbar-width: thin;
       max-width: 1400px;
       margin: 0 auto;
+    }
+
+    /* Carousel wrapper for sections where we hide native scrollbar and use nav buttons */
+    .carousel-wrap {
+      position: relative;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 8px 24px 20px;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+    }
+
+    /* visually hide scrollbar for carousel-track */
+    .carousel-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .carousel-track {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 4;
+      backdrop-filter: blur(6px);
+      transition: var(--transition);
+    }
+
+    .carousel-nav:hover {
+      background: rgba(124, 58, 237, 0.9);
+    }
+
+    .carousel-nav.left {
+      left: 4px;
+    }
+
+    .carousel-nav.right {
+      right: 4px;
     }
 
     .scroll-row::-webkit-scrollbar {
@@ -770,8 +859,13 @@
       z-index: 1;
     }
 
-    .range-tooltip-min { left: var(--range-min-percent, 0%); }
-    .range-tooltip-max { left: var(--range-max-percent, 100%); }
+    .range-tooltip-min {
+      left: var(--range-min-percent, 0%);
+    }
+
+    .range-tooltip-max {
+      left: var(--range-max-percent, 100%);
+    }
 
     .filter-range {
       position: absolute;
@@ -1939,6 +2033,192 @@
       font-size: 1.2rem;
       flex-shrink: 0;
     }
+
+    /* ==================== HOME GRID LAYOUT ==================== */
+    .home-top-grid {
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .home-top-left {
+      min-width: 0;
+    }
+
+    .home-top-right {
+      min-width: 0;
+    }
+
+    .anime-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 0 24px;
+    }
+
+    .anime-tab {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+
+    .anime-tab:hover {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    .anime-tab.active {
+      background: var(--accent-grad);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .anime-sidebar-filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 0 24px;
+    }
+
+    .anime-sidebar-filters select {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .anime-sidebar-filters select:focus {
+      border-color: var(--accent-1);
+    }
+
+    .anime-carousel-wrap .carousel-nav.up,
+    .anime-carousel-wrap .carousel-nav.down {
+      display: none;
+    }
+
+    @media (min-width: 1001px) {
+
+      .anime-carousel-wrap .carousel-nav.left,
+      .anime-carousel-wrap .carousel-nav.right {
+        display: none;
+      }
+
+      .anime-carousel-wrap {
+        position: relative;
+        max-width: 100%;
+        margin: 0;
+        padding: 8px 24px 20px;
+      }
+
+      .anime-carousel-wrap .carousel-nav.up,
+      .anime-carousel-wrap .carousel-nav.down {
+        display: flex;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 5;
+        top: 90%;
+      }
+
+      .anime-carousel-wrap .carousel-nav.up {
+        top: -10px;
+      }
+
+      .anime-carousel-wrap .carousel-nav.down {
+        bottom: -10px;
+      }
+
+      .anime-carousel-track {
+        display: grid !important;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        height: 700px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        align-content: start;
+        scrollbar-width: none; /* Firefox: hide scrollbar visually */
+      }
+
+      .anime-carousel-track::-webkit-scrollbar {
+        display: none;
+        /* Chrome/Safari */
+      }
+
+      .anime-carousel-track .card {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        min-height: 100px;
+        min-width: 0;
+      }
+
+      .anime-carousel-track .card-poster {
+        flex: 0 0 30%;  /* locked width — never grows, never shrinks, always 30% */
+        overflow: hidden;
+        border-radius: var(--radius-md) 0 0 var(--radius-md);
+      }
+
+      .anime-carousel-track .card-poster img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: var(--radius-md) 0 0 var(--radius-md);
+      }
+
+      .anime-carousel-track .card-info {
+        flex: 1;
+        min-width: 0;
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        background: var(--bg-card);
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      }
+
+      .anime-carousel-track .card-title {
+        font-size: 0.88rem;
+        font-weight: 600;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+
+      }
+
+      .anime-carousel-track .card-year {
+        font-size: 0.75rem;
+        margin-top: 4px;
+      }
+
+      .anime-carousel-track .card-overlay,
+      .anime-carousel-track .card-rating,
+      .anime-carousel-track .card-type-badge {
+        /* Keep overlays positioned relative to the poster */
+      }
+    }
+
+    @media (max-width: 1000px) {
+      .home-top-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -1979,6 +2259,8 @@
       <div id="hero">
         <div class="hero-backdrop" id="hero-backdrop"></div>
         <div class="hero-overlay"></div>
+        <button class="hero-nav-btn hero-nav-left" id="hero-prev" aria-label="Previous">❮</button>
+        <button class="hero-nav-btn hero-nav-right" id="hero-next" aria-label="Next">❯</button>
         <div class="hero-content container">
           <div class="hero-badge" id="hero-badge">🔥 Trending</div>
           <h1 class="hero-title" id="hero-title">Loading…</h1>
@@ -2002,149 +2284,228 @@
         <div id="history-list" class="history-section"></div>
       </div>
 
-      <!-- Trending All -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">
-            <div class="section-accent"></div>Trending This Week
+      <!-- Trending and Popular Movies + Anime Grid -->
+      <div class="home-top-grid">
+        <div class="home-top-left">
+          <!-- Trending All -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">
+                <div class="section-accent"></div>Trending This Week
+              </div>
+            </div>
+            <div class="carousel-wrap">
+              <button class="carousel-nav left" id="trending-prev" aria-label="Previous">❮</button>
+              <div class="carousel-track" id="row-trending">
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                  <div class="skeleton-text skeleton"></div>
+                  <div class="skeleton-text short skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                  <div class="skeleton-text skeleton"></div>
+                  <div class="skeleton-text short skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                  <div class="skeleton-text skeleton"></div>
+                  <div class="skeleton-text short skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                  <div class="skeleton-text skeleton"></div>
+                  <div class="skeleton-text short skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                  <div class="skeleton-text skeleton"></div>
+                  <div class="skeleton-text short skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                  <div class="skeleton-text skeleton"></div>
+                  <div class="skeleton-text short skeleton"></div>
+                </div>
+              </div>
+              <button class="carousel-nav right" id="trending-next" aria-label="Next">❯</button>
+            </div>
           </div>
-        </div>
-        <div class="scroll-row" id="row-trending">
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-            <div class="skeleton-text skeleton"></div>
-            <div class="skeleton-text short skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-            <div class="skeleton-text skeleton"></div>
-            <div class="skeleton-text short skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-            <div class="skeleton-text skeleton"></div>
-            <div class="skeleton-text short skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-            <div class="skeleton-text skeleton"></div>
-            <div class="skeleton-text short skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-            <div class="skeleton-text skeleton"></div>
-            <div class="skeleton-text short skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-            <div class="skeleton-text skeleton"></div>
-            <div class="skeleton-text short skeleton"></div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Popular Movies -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">
-            <div class="section-accent"></div>Popular Movies
+          <!-- Popular Movies -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">
+                <div class="section-accent"></div>Popular Movies
+              </div>
+              <button class="section-more" onclick="showPage('movies')">See all →</button>
+            </div>
+            <div class="carousel-wrap">
+              <button class="carousel-nav left" id="popular-movies-prev" aria-label="Previous">❮</button>
+              <div class="carousel-track" id="row-popular-movies">
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+              </div>
+              <button class="carousel-nav right" id="popular-movies-next" aria-label="Next">❯</button>
+            </div>
           </div>
-          <button class="section-more" onclick="showPage('movies')">See all →</button>
-        </div>
-        <div class="scroll-row" id="row-popular-movies">
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Top Rated Movies -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">
-            <div class="section-accent"></div>Top Rated Movies
+          <!-- Top Rated Movies -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">
+                <div class="section-accent"></div>Top Rated Movies
+              </div>
+            </div>
+            <div class="carousel-wrap">
+              <button class="carousel-nav left" id="toprated-movies-prev" aria-label="Previous">❮</button>
+              <div class="carousel-track" id="row-toprated-movies">
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+              </div>
+              <button class="carousel-nav right" id="toprated-movies-next" aria-label="Next">❯</button>
+            </div>
           </div>
-        </div>
-        <div class="scroll-row" id="row-toprated-movies">
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Popular TV -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">
-            <div class="section-accent"></div>Popular TV Shows
+          <!-- Popular TV -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">
+                <div class="section-accent"></div>Popular TV Shows
+              </div>
+              <button class="section-more" onclick="showPage('tvshows')">See all →</button>
+            </div>
+            <div class="carousel-wrap">
+              <button class="carousel-nav left" id="popular-tv-prev" aria-label="Previous">❮</button>
+              <div class="carousel-track" id="row-popular-tv">
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+              </div>
+              <button class="carousel-nav right" id="popular-tv-next" aria-label="Next">❯</button>
+            </div>
           </div>
-          <button class="section-more" onclick="showPage('tvshows')">See all →</button>
-        </div>
-        <div class="scroll-row" id="row-popular-tv">
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Top Rated TV -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">
-            <div class="section-accent"></div>Top Rated TV Shows
+          <!-- Top Rated TV -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">
+                <div class="section-accent"></div>Top Rated TV Shows
+              </div>
+            </div>
+            <div class="carousel-wrap">
+              <button class="carousel-nav left" id="toprated-tv-prev" aria-label="Previous">❮</button>
+              <div class="carousel-track" id="row-toprated-tv">
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+              </div>
+              <button class="carousel-nav right" id="toprated-tv-next" aria-label="Next">❯</button>
+            </div>
           </div>
         </div>
-        <div class="scroll-row" id="row-toprated-tv">
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
-          </div>
-          <div class="skeleton-card skeleton">
-            <div class="skeleton-poster skeleton"></div>
+
+        <div class="home-top-right">
+          <!-- Anime Sidebar -->
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">
+                <div class="section-accent"></div>Anime
+              </div>
+            </div>
+            <div class="anime-tabs">
+              <button class="anime-tab active" id="anime-tab-season">This Season</button>
+              <button class="anime-tab" id="anime-tab-upcoming">Upcoming</button>
+            </div>
+            <div class="anime-sidebar-filters">
+              <select id="anime-year-filter">
+                <option value="">Any Year</option>
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+              </select>
+              <select id="anime-season-filter">
+                <option value="">Any Season</option>
+                <option value="winter">Winter</option>
+                <option value="spring">Spring</option>
+                <option value="summer">Summer</option>
+                <option value="fall">Fall</option>
+              </select>
+              <button id="anime-search-btn" class="nav-btn"
+                style="border-radius: var(--radius-sm); width: auto; padding: 0 12px; height: 35px; background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border); font-size: 0.85rem; cursor: pointer;">Search</button>
+            </div>
+            <div class="carousel-wrap anime-carousel-wrap">
+              <button class="carousel-nav up" id="anime-up" aria-label="Up">▲</button>
+              <button class="carousel-nav left" id="anime-prev" aria-label="Previous">❮</button>
+              <div class="carousel-track anime-carousel-track" id="row-anime-season">
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+                <div class="skeleton-card skeleton">
+                  <div class="skeleton-poster skeleton"></div>
+                </div>
+              </div>
+              <button class="carousel-nav right" id="anime-next" aria-label="Next">❯</button>
+              <button class="carousel-nav down" id="anime-down" aria-label="Down">▼</button>
+            </div>
           </div>
         </div>
       </div>
@@ -2159,7 +2520,8 @@
           </div>
         </div>
         <div class="advanced-filters" id="movie-advanced-filters">
-          <div class="filter-field range-filter year-range-picker" data-range-filter data-range-kind="year" data-min-id="movie-release-year-min" data-max-id="movie-release-year-max">
+          <div class="filter-field range-filter year-range-picker" data-range-filter data-range-kind="year"
+            data-min-id="movie-release-year-min" data-max-id="movie-release-year-max">
             <div class="range-filter-head">
               <div>
                 <label for="movie-release-year-min">Release year</label>
@@ -2198,11 +2560,14 @@
               <div class="range-track-highlight"></div>
               <div class="range-tooltip range-tooltip-min"></div>
               <div class="range-tooltip range-tooltip-max"></div>
-              <input class="filter-range" id="movie-release-year-min" type="range" min="1900" max="2030" step="1" value="1900" data-default-value="1900" aria-label="Minimum movie release year">
-              <input class="filter-range" id="movie-release-year-max" type="range" min="1900" max="2030" step="1" value="2030" data-default-value="2030" aria-label="Maximum movie release year">
+              <input class="filter-range" id="movie-release-year-min" type="range" min="1900" max="2030" step="1"
+                value="1900" data-default-value="1900" aria-label="Minimum movie release year">
+              <input class="filter-range" id="movie-release-year-max" type="range" min="1900" max="2030" step="1"
+                value="2030" data-default-value="2030" aria-label="Maximum movie release year">
             </div>
           </div>
-          <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax" data-min-id="movie-rating-min" data-max-id="movie-rating-max">
+          <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax"
+            data-min-id="movie-rating-min" data-max-id="movie-rating-max">
             <div class="range-filter-head">
               <div>
                 <label for="movie-rating-min">Rating</label>
@@ -2216,11 +2581,14 @@
               <div class="range-track-highlight"></div>
               <div class="range-tooltip range-tooltip-min"></div>
               <div class="range-tooltip range-tooltip-max"></div>
-              <input class="filter-range" id="movie-rating-min" type="range" min="0" max="10" step="0.1" value="0" data-default-value="0" aria-label="Minimum movie rating">
-              <input class="filter-range" id="movie-rating-max" type="range" min="0" max="10" step="0.1" value="10" data-default-value="10" aria-label="Maximum movie rating">
+              <input class="filter-range" id="movie-rating-min" type="range" min="0" max="10" step="0.1" value="0"
+                data-default-value="0" aria-label="Minimum movie rating">
+              <input class="filter-range" id="movie-rating-max" type="range" min="0" max="10" step="0.1" value="10"
+                data-default-value="10" aria-label="Maximum movie rating">
             </div>
           </div>
-          <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax" data-min-id="movie-vote-min" data-max-id="movie-vote-max">
+          <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax"
+            data-min-id="movie-vote-min" data-max-id="movie-vote-max">
             <div class="range-filter-head">
               <div>
                 <label for="movie-vote-min">Vote count</label>
@@ -2234,8 +2602,10 @@
               <div class="range-track-highlight"></div>
               <div class="range-tooltip range-tooltip-min"></div>
               <div class="range-tooltip range-tooltip-max"></div>
-              <input class="filter-range" id="movie-vote-min" type="range" min="0" max="10000" step="50" value="0" data-default-value="0" aria-label="Minimum movie vote count">
-              <input class="filter-range" id="movie-vote-max" type="range" min="0" max="10000" step="50" value="10000" data-default-value="10000" aria-label="Maximum movie vote count">
+              <input class="filter-range" id="movie-vote-min" type="range" min="0" max="10000" step="50" value="0"
+                data-default-value="0" aria-label="Minimum movie vote count">
+              <input class="filter-range" id="movie-vote-max" type="range" min="0" max="10000" step="50" value="10000"
+                data-default-value="10000" aria-label="Maximum movie vote count">
             </div>
           </div>
           <div class="filter-field">
@@ -2269,7 +2639,8 @@
           </div>
         </div>
         <div class="advanced-filters" id="tv-advanced-filters">
-          <div class="filter-field range-filter year-range-picker" data-range-filter data-range-kind="year" data-min-id="tv-first-air-year-min" data-max-id="tv-first-air-year-max">
+          <div class="filter-field range-filter year-range-picker" data-range-filter data-range-kind="year"
+            data-min-id="tv-first-air-year-min" data-max-id="tv-first-air-year-max">
             <div class="range-filter-head">
               <div>
                 <label for="tv-first-air-year-min">First air year</label>
@@ -2308,11 +2679,14 @@
               <div class="range-track-highlight"></div>
               <div class="range-tooltip range-tooltip-min"></div>
               <div class="range-tooltip range-tooltip-max"></div>
-              <input class="filter-range" id="tv-first-air-year-min" type="range" min="1900" max="2030" step="1" value="1900" data-default-value="1900" aria-label="Minimum first air year">
-              <input class="filter-range" id="tv-first-air-year-max" type="range" min="1900" max="2030" step="1" value="2030" data-default-value="2030" aria-label="Maximum first air year">
+              <input class="filter-range" id="tv-first-air-year-min" type="range" min="1900" max="2030" step="1"
+                value="1900" data-default-value="1900" aria-label="Minimum first air year">
+              <input class="filter-range" id="tv-first-air-year-max" type="range" min="1900" max="2030" step="1"
+                value="2030" data-default-value="2030" aria-label="Maximum first air year">
             </div>
           </div>
-          <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax" data-min-id="tv-vote-min" data-max-id="tv-vote-max">
+          <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax"
+            data-min-id="tv-vote-min" data-max-id="tv-vote-max">
             <div class="range-filter-head">
               <div>
                 <label for="tv-vote-min">Vote count</label>
@@ -2326,8 +2700,10 @@
               <div class="range-track-highlight"></div>
               <div class="range-tooltip range-tooltip-min"></div>
               <div class="range-tooltip range-tooltip-max"></div>
-              <input class="filter-range" id="tv-vote-min" type="range" min="0" max="10000" step="50" value="0" data-default-value="0" aria-label="Minimum TV vote count">
-              <input class="filter-range" id="tv-vote-max" type="range" min="0" max="10000" step="50" value="10000" data-default-value="10000" aria-label="Maximum TV vote count">
+              <input class="filter-range" id="tv-vote-min" type="range" min="0" max="10000" step="50" value="0"
+                data-default-value="0" aria-label="Minimum TV vote count">
+              <input class="filter-range" id="tv-vote-max" type="range" min="0" max="10000" step="50" value="10000"
+                data-default-value="10000" aria-label="Maximum TV vote count">
             </div>
           </div>
           <div class="filter-field">
@@ -2459,7 +2835,7 @@
           <button class="provider-tab" onclick="setProvider('vidnest', this)">VidNest</button>
           <button class="provider-tab" onclick="setProvider('111movies', this)">111Movies</button>
           <button class="provider-tab" onclick="setProvider('mappletv', this)">MappleTV</button>
-          <button class="provider-tab" onclick="setProvider('vsembed', this)">VSEmbed</button>  
+          <button class="provider-tab" onclick="setProvider('vsembed', this)">VSEmbed</button>
         </div>
 
         <!-- TV Controls -->
@@ -2861,6 +3237,28 @@
       return seasons;
     }
 
+    // IMDb search by title (try a few possible endpoints)
+    async function fetchImdbSearch(title) {
+      const tries = [
+        `${IMDB_API_BASE}/search/title?q=${encodeURIComponent(title)}`,
+        `${IMDB_API_BASE}/search?q=${encodeURIComponent(title)}`,
+        `${IMDB_API_BASE}/titles?name=${encodeURIComponent(title)}`
+      ];
+      for (const url of tries) {
+        try {
+          const res = await fetchJsonWithRetry(url, 2);
+          if (res && (Array.isArray(res.results) || Array.isArray(res.items) || Array.isArray(res.results))) return res;
+        } catch (e) { /* try next */ }
+      }
+      return null;
+    }
+
+    async function fetchImdbDetails(imdbId) {
+      if (!imdbId) throw new Error('Missing IMDb id');
+      const url = `${IMDB_API_BASE}/titles/${encodeURIComponent(imdbId)}`;
+      return fetchJsonWithRetry(url, 3);
+    }
+
     function normalizeImdbEpisodes(episodes = []) {
       return episodes.map((ep, index) => {
         const episodeValue = Number(ep.episode_number ?? ep.episodeNumber ?? ep.episode ?? ep.number);
@@ -3006,6 +3404,8 @@
           loadRow('/tv/popular', 'row-popular-tv', 'tv'),
           loadRow('/tv/top_rated', 'row-toprated-tv', 'tv'),
         ]);
+        // Load anime this season into its carousel
+        await renderAnimeRow();
 
         renderHistory();
       } catch (e) {
@@ -3063,6 +3463,220 @@
       const data = await tmdb(path, { page: 1 });
       const items = (data.results || []).map(i => ({ ...i, media_type: i.media_type || defaultType }));
       renderCards(rowId, items);
+    }
+
+    // Hero manual controls
+    function heroPrev() {
+      if (!heroItems || !heroItems.length) return;
+      clearInterval(heroTimer);
+      heroIndex = (heroIndex - 1 + heroItems.length) % heroItems.length;
+      setHero(heroItems[heroIndex]);
+      if (heroItems.length > 1) heroTimer = setInterval(() => { heroIndex = (heroIndex + 1) % heroItems.length; setHero(heroItems[heroIndex]); }, 7000);
+    }
+
+    function heroNext() {
+      if (!heroItems || !heroItems.length) return;
+      clearInterval(heroTimer);
+      heroIndex = (heroIndex + 1) % heroItems.length;
+      setHero(heroItems[heroIndex]);
+      if (heroItems.length > 1) heroTimer = setInterval(() => { heroIndex = (heroIndex + 1) % heroItems.length; setHero(heroItems[heroIndex]); }, 7000);
+    }
+
+    // Anime carousel: fetch from Jikan and render
+    function createAnimeCard(anime) {
+      const title = anime.title || anime.title_english || anime.title_japanese || 'Untitled';
+      const year = (anime.aired && anime.aired.from) ? (new Date(anime.aired.from).getFullYear() || '') : (anime.year || '');
+      const poster = (anime.images && anime.images.jpg && anime.images.jpg.image_url) ? anime.images.jpg.image_url : null;
+
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.onclick = () => openAnimeModal(anime);
+      div.innerHTML = `
+    <div class="card-poster">
+      ${poster ? `<img src="${poster}" alt="${escHtml(title)}" loading="lazy" onerror="this.style.display='none'">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:var(--bg-elevated)">🎬</div>`}
+      <div class="card-overlay">
+        <div class="card-play-btn">▶</div>
+      </div>
+      <div class="card-rating">⭐ ${anime.score ? (anime.score).toFixed ? anime.score.toFixed(1) : anime.score : '?'}</div>
+    </div>
+    <div class="card-info">
+      <div class="card-title">${escHtml(title)}</div>
+      <div class="card-year">${year || '—'}</div>
+    </div>
+  `;
+      return div;
+    }
+
+    async function renderAnimeRow(url = 'https://api.jikan.moe/v4/seasons/now') {
+      try {
+        const container = document.getElementById('row-anime-season');
+        if (!container) return;
+
+        // Show skeletons while loading
+        container.innerHTML = `
+          <div class="skeleton-card skeleton"><div class="skeleton-poster skeleton"></div></div>
+          <div class="skeleton-card skeleton"><div class="skeleton-poster skeleton"></div></div>
+          <div class="skeleton-card skeleton"><div class="skeleton-poster skeleton"></div></div>
+          <div class="skeleton-card skeleton"><div class="skeleton-poster skeleton"></div></div>
+        `;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Jikan fetch failed');
+        const data = await res.json();
+        const items = Array.isArray(data.data) ? data.data : [];
+
+        container.innerHTML = '';
+        items.forEach(a => container.appendChild(createAnimeCard(a)));
+      } catch (e) {
+        console.error('Failed to load anime season:', e);
+        const container = document.getElementById('row-anime-season');
+        if (container) container.innerHTML = '<div style="padding:20px; color:var(--text-muted)">Failed to load anime.</div>';
+      }
+    }
+
+    function animeScrollAmount(track) {
+      const card = track.querySelector('.card');
+      if (!card) return Math.floor(track.clientWidth * 0.8);
+      return Math.floor((card.offsetWidth + 16) * 3); // scroll by ~3 cards
+    }
+
+    function animeNext() {
+      const track = document.getElementById('row-anime-season');
+      if (!track) return;
+      const amt = animeScrollAmount(track);
+      track.scrollBy({ left: amt, behavior: 'smooth' });
+    }
+
+    function animePrev() {
+      const track = document.getElementById('row-anime-season');
+      if (!track) return;
+      const amt = animeScrollAmount(track);
+      track.scrollBy({ left: -amt, behavior: 'smooth' });
+    }
+
+    function animeScrollUp() {
+      const track = document.getElementById('row-anime-season');
+      if (!track) return;
+      const card = track.querySelector('.card');
+      const amt = card ? (card.offsetHeight + 16) * 2 : 500;
+      track.scrollBy({ top: -amt, behavior: 'smooth' });
+    }
+
+    function animeScrollDown() {
+      const track = document.getElementById('row-anime-season');
+      if (!track) return;
+      const card = track.querySelector('.card');
+      const amt = card ? (card.offsetHeight + 16) * 2 : 500;
+      track.scrollBy({ top: amt, behavior: 'smooth' });
+    }
+
+    // Generic scroll amount helper (reuse across rows)
+    function scrollAmount(track) {
+      const card = track.querySelector('.card');
+      if (!card) return Math.floor(track.clientWidth * 0.8);
+      return Math.floor((card.offsetWidth + 16) * 3); // scroll by ~3 cards
+    }
+
+    function rowNext(rowId) {
+      const track = document.getElementById(rowId);
+      if (!track) return;
+      const amt = scrollAmount(track);
+      track.scrollBy({ left: amt, behavior: 'smooth' });
+    }
+
+    function rowPrev(rowId) {
+      const track = document.getElementById(rowId);
+      if (!track) return;
+      const amt = scrollAmount(track);
+      track.scrollBy({ left: -amt, behavior: 'smooth' });
+    }
+
+    // Open modal for anime item — try TMDB search by title first, fallback to Jikan details
+    async function openAnimeModal(anime) {
+      const title = anime.title || anime.title_english || anime.title_japanese || '';
+      // Basic modal visual state
+      document.getElementById('modal-title').textContent = title || 'Loading…';
+      document.getElementById('modal-meta').innerHTML = '';
+      document.getElementById('modal-genres').innerHTML = '';
+      document.getElementById('modal-overview').textContent = anime.synopsis || anime.description || '';
+      document.getElementById('modal-poster-wrap').innerHTML = `<div class="modal-poster-placeholder">🎬</div>`;
+      document.getElementById('modal-backdrop-placeholder').style.display = 'block';
+      const oldImg = document.getElementById('modal-backdrop-img'); if (oldImg) oldImg.remove();
+      document.getElementById('tv-controls').style.display = 'none';
+      document.getElementById('modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+
+      // Try TMDB search by title
+      let handled = false;
+      try {
+        const search = await tmdb('/search/multi', { query: title });
+        const first = (search.results || [])[0];
+        if (first && (first.media_type === 'movie' || first.media_type === 'tv')) {
+          // Delegate to existing openModal to render full details
+          await openModal(first.id, first.media_type, first, false, 1, 1);
+          handled = true;
+        }
+      } catch (e) {
+        console.warn('TMDB search failed for anime title, will try IMDb then Jikan', e);
+      }
+
+      if (!handled) {
+        // Try IMDb search by title
+        try {
+          const imdbSearch = await fetchImdbSearch(title);
+          let first = null;
+          if (imdbSearch) {
+            first = (imdbSearch.results && imdbSearch.results[0]) || (imdbSearch.items && imdbSearch.items[0]) || null;
+          }
+          if (first) {
+            let imdbId = first.id || first.titleId || first.imdb_id || null;
+            if (imdbId && imdbId.includes('/')) {
+              // strip possible url segments
+              imdbId = imdbId.split('/').pop();
+            }
+            if (imdbId) {
+              try {
+                const imdbDetails = await fetchImdbDetails(imdbId);
+                if (imdbDetails) {
+                  // Populate modal with IMDb details
+                  const t = imdbDetails.title || imdbDetails.primaryTitle || title;
+                  const plot = imdbDetails.plot || imdbDetails.plotSummary || imdbDetails.description || anime.synopsis || '';
+                  const img = (imdbDetails.image && (imdbDetails.image.url || imdbDetails.image)) || null;
+                  document.getElementById('modal-title').textContent = t || title;
+                  document.getElementById('modal-overview').textContent = plot || '';
+                  document.getElementById('modal-meta').innerHTML = imdbDetails.year ? `<span class="modal-tag">${imdbDetails.year}</span>` : '';
+                  document.getElementById('modal-genres').innerHTML = (imdbDetails.genres || []).map(g => `<span class="modal-genre">${escHtml(g)}</span>`).join('');
+                  if (img) document.getElementById('modal-poster-wrap').innerHTML = `<img class="modal-poster" src="${img}" alt="${escHtml(t)}" onerror="this.style.display='none'">`;
+                  // Backdrop if available
+                  if (imdbDetails.image && imdbDetails.image.url) {
+                    const imgEl = document.createElement('img'); imgEl.id = 'modal-backdrop-img'; imgEl.className = 'modal-backdrop-img'; imgEl.src = imdbDetails.image.url; imgEl.alt = ''; imgEl.onerror = () => imgEl.remove();
+                    const ph = document.getElementById('modal-backdrop-placeholder'); ph.parentNode.insertBefore(imgEl, ph); ph.style.display = 'none';
+                  }
+                  handled = true;
+                }
+              } catch (e) { console.warn('IMDb details fetch failed', e); }
+            }
+          }
+        } catch (e) {
+          console.warn('IMDb search failed', e);
+        }
+      }
+
+      // Fallback: populate modal with Jikan info
+      try {
+        const poster = (anime.images && anime.images.jpg && anime.images.jpg.image_url) ? anime.images.jpg.image_url : null;
+        if (poster) document.getElementById('modal-poster-wrap').innerHTML = `<img class="modal-poster" src="${poster}" alt="${escHtml(title)}" onerror="this.style.display='none'">`;
+        if (anime.trailer && anime.trailer.youtube_id) {
+          const bd = anime.trailer.images && anime.trailer.images.large ? anime.trailer.images.large : null;
+          if (bd) {
+            const img = document.createElement('img'); img.id = 'modal-backdrop-img'; img.className = 'modal-backdrop-img'; img.src = bd; img.alt = ''; img.onerror = () => img.remove();
+            const ph = document.getElementById('modal-backdrop-placeholder'); ph.parentNode.insertBefore(img, ph); ph.style.display = 'none';
+          }
+        }
+        const year = (anime.aired && anime.aired.from) ? (new Date(anime.aired.from).getFullYear() || '') : (anime.year || '');
+        document.getElementById('modal-meta').innerHTML = `${year ? `<span class="modal-tag">${year}</span>` : ''}`;
+        document.getElementById('modal-genres').innerHTML = (anime.genres || []).map(g => `<span class="modal-genre">${escHtml(g.name || g)}</span>`).join('');
+      } catch (e) { console.warn(e); }
     }
 
     // ==================== DISCOVER FILTERS ====================
@@ -4229,6 +4843,70 @@
       loadSettings();
       initSearch();
       setupInfiniteScroll();
+      // Bind new carousel controls
+      const hPrev = document.getElementById('hero-prev');
+      const hNext = document.getElementById('hero-next');
+      if (hPrev) hPrev.addEventListener('click', heroPrev);
+      if (hNext) hNext.addEventListener('click', heroNext);
+      const aPrev = document.getElementById('anime-prev');
+      const aNext = document.getElementById('anime-next');
+      if (aPrev) aPrev.addEventListener('click', animePrev);
+      if (aNext) aNext.addEventListener('click', animeNext);
+      const aUp = document.getElementById('anime-up');
+      const aDown = document.getElementById('anime-down');
+      if (aUp) aUp.addEventListener('click', animeScrollUp);
+      if (aDown) aDown.addEventListener('click', animeScrollDown);
+
+      // Anime tabs and search
+      const animeTabSeason = document.getElementById('anime-tab-season');
+      const animeTabUpcoming = document.getElementById('anime-tab-upcoming');
+      const animeSearchBtn = document.getElementById('anime-search-btn');
+      const animeYearFilter = document.getElementById('anime-year-filter');
+      const animeSeasonFilter = document.getElementById('anime-season-filter');
+
+      if (animeTabSeason) {
+        animeTabSeason.addEventListener('click', () => {
+          animeTabSeason.classList.add('active');
+          if (animeTabUpcoming) animeTabUpcoming.classList.remove('active');
+          renderAnimeRow('https://api.jikan.moe/v4/seasons/now');
+        });
+      }
+      if (animeTabUpcoming) {
+        animeTabUpcoming.addEventListener('click', () => {
+          animeTabUpcoming.classList.add('active');
+          if (animeTabSeason) animeTabSeason.classList.remove('active');
+          renderAnimeRow('https://api.jikan.moe/v4/seasons/upcoming');
+        });
+      }
+      if (animeSearchBtn) {
+        animeSearchBtn.addEventListener('click', () => {
+          const year = animeYearFilter ? animeYearFilter.value : '';
+          const season = animeSeasonFilter ? animeSeasonFilter.value : '';
+          if (animeTabSeason) animeTabSeason.classList.remove('active');
+          if (animeTabUpcoming) animeTabUpcoming.classList.remove('active');
+
+          if (year && season) {
+            renderAnimeRow(`https://api.jikan.moe/v4/seasons/${year}/${season}`);
+          } else {
+            renderAnimeRow('https://api.jikan.moe/v4/seasons/now');
+          }
+        });
+      }
+
+      // Bind row carousel controls
+      const mappings = [
+        ['trending-prev', 'trending-next', 'row-trending'],
+        ['popular-movies-prev', 'popular-movies-next', 'row-popular-movies'],
+        ['toprated-movies-prev', 'toprated-movies-next', 'row-toprated-movies'],
+        ['popular-tv-prev', 'popular-tv-next', 'row-popular-tv'],
+        ['toprated-tv-prev', 'toprated-tv-next', 'row-toprated-tv']
+      ];
+      mappings.forEach(([prevId, nextId, rowId]) => {
+        const p = document.getElementById(prevId);
+        const n = document.getElementById(nextId);
+        if (p) p.addEventListener('click', () => rowPrev(rowId));
+        if (n) n.addEventListener('click', () => rowNext(rowId));
+      });
       initHome();
     });
   </script>
