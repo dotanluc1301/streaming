@@ -2034,6 +2034,134 @@
       flex-shrink: 0;
     }
 
+    /* ==================== CONTINUE WATCHING ==================== */
+    .cw-card {
+      width: 280px;
+      flex-shrink: 0;
+      cursor: pointer;
+      position: relative;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .cw-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: var(--shadow-md), var(--shadow-glow);
+    }
+    .cw-card-thumb {
+      aspect-ratio: 16/9;
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+    }
+    .cw-card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .cw-card:hover .cw-card-thumb img {
+      transform: scale(1.05);
+    }
+    .cw-progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      z-index: 2;
+    }
+    .cw-progress-fill {
+      height: 100%;
+      background: var(--accent-grad);
+      transition: width 0.3s ease;
+    }
+    .cw-resume-badge {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      opacity: 0;
+      background: var(--accent-grad);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.6);
+      transition: opacity var(--transition), transform var(--transition);
+      pointer-events: none;
+      z-index: 3;
+    }
+    .cw-card:hover .cw-resume-badge {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .cw-ep-label {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.85);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      backdrop-filter: blur(4px);
+      border: 1px solid var(--border);
+      z-index: 2;
+    }
+    .cw-dismiss {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.75);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity var(--transition), background var(--transition), border-color var(--transition);
+      z-index: 4;
+      font-size: 0.8rem;
+    }
+    .cw-card:hover .cw-dismiss {
+      opacity: 1;
+    }
+    .cw-dismiss:hover {
+      background: rgba(219, 39, 119, 0.3);
+      border-color: var(--accent-2);
+      color: #fff;
+    }
+    .cw-info {
+      padding: 10px 2px 0;
+    }
+    .cw-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 3px;
+    }
+    .cw-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
     /* ==================== HOME GRID LAYOUT ==================== */
     .home-top-grid {
       display: grid;
@@ -2273,15 +2401,19 @@
         </div>
       </div>
 
-      <!-- Watch History -->
-      <div id="history-container" style="display:none">
+      <!-- Continue Watching (Simulated Playback Progress Carousel) -->
+      <div id="cw-section" class="section" style="display:none">
         <div class="section-header">
           <div class="section-title">
-            <div class="section-accent"></div>Continue Watching
+            <div class="section-accent"></div>▶ Continue Watching
           </div>
           <button class="section-more" onclick="clearHistory()">Clear All</button>
         </div>
-        <div id="history-list" class="history-section"></div>
+        <div class="carousel-wrap">
+          <button class="carousel-nav left" id="cw-prev" aria-label="Previous">❮</button>
+          <div class="carousel-track" id="cw-track"></div>
+          <button class="carousel-nav right" id="cw-next" aria-label="Next">❯</button>
+        </div>
       </div>
 
       <!-- Trending and Popular Movies + Anime Grid -->
@@ -2845,7 +2977,7 @@
             <select class="tv-select" id="season-select" onchange="onSeasonChange()">
               <option>Loading seasons…</option>
             </select>
-            <select class="tv-select" id="episode-select">
+            <select class="tv-select" id="episode-select" onchange="updateModalPlayButton()">
               <option>Select episode</option>
             </select>
           </div>
@@ -2853,7 +2985,7 @@
 
         <!-- Actions -->
         <div class="modal-actions">
-          <button class="watch-btn" onclick="openPlayer()">▶ Watch Now</button>
+          <button class="watch-btn" id="modal-watch-btn" onclick="openPlayer()">▶ Watch Now</button>
           <button class="watchlist-btn" id="watchlist-toggle-btn" onclick="toggleWatchlist()">
             <span id="watchlist-icon">＋</span> Watchlist
           </button>
@@ -3078,7 +3210,8 @@
     }
     function clearHistory() {
       saveHistory([]);
-      renderHistory();
+      saveAllProgress({});
+      renderContinueWatching();
     }
 
     // ==================== TMDB API ====================
@@ -3407,7 +3540,7 @@
         // Load anime this season into its carousel
         await renderAnimeRow();
 
-        renderHistory();
+        renderContinueWatching();
       } catch (e) {
         console.error('Init failed:', e);
         showToast('Failed to load content. Check your API key in Settings.', 'error');
@@ -4040,29 +4173,314 @@
       return params;
     }
 
-    // ==================== HISTORY RENDER ====================
-    function renderHistory() {
-      const history = getHistory();
-      const container = document.getElementById('history-container');
-      const list = document.getElementById('history-list');
-      if (!container || !list) return;
-      if (history.length === 0) { container.style.display = 'none'; return; }
+    // Playback progress and heartbeat state
+    let heartbeatInterval = null;
+    let playerCurrentTime = 0;
+    let playerDuration = 0;
+
+    // ==================== PLAYBACK PROGRESS STORAGE HELPERS ====================
+    function getAllProgress() {
+      try {
+        return JSON.parse(localStorage.getItem('cinestream_progress')) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveAllProgress(progress) {
+      localStorage.setItem('cinestream_progress', JSON.stringify(progress));
+    }
+
+    function getProgressKey(id, type) {
+      return `${type}-${id}`;
+    }
+
+    function findProgressEntry(id, type, imdbId) {
+      const progress = getAllProgress();
+      for (const key in progress) {
+        const entry = progress[key];
+        if (entry.type === type) {
+          if (String(entry.id) === String(id)) {
+            return { key, entry };
+          }
+          if (imdbId && entry.imdbId && String(entry.imdbId) === String(imdbId)) {
+            return { key, entry };
+          }
+          if (id && entry.imdbId && String(entry.imdbId) === String(id)) {
+            return { key, entry };
+          }
+        }
+      }
+      return null;
+    }
+
+    function getProgress(id, type, season, episode) {
+      const imdbId = getImdbId();
+      const match = findProgressEntry(id, type, imdbId);
+      if (!match) return null;
+      const entry = match.entry;
+      
+      if (type === 'tv' && season !== undefined && episode !== undefined) {
+        if (Number(entry.season) === Number(season) && Number(entry.episode) === Number(episode)) {
+          return entry;
+        }
+        return null;
+      }
+      return entry;
+    }
+
+    function saveProgress(isCompleted = false) {
+      if (!currentPlayer) return;
+      const { id, type, season, episode, provider, imdbId } = currentPlayer;
+      
+      const progress = getAllProgress();
+      const match = findProgressEntry(id, type, imdbId);
+      const key = match ? match.key : getProgressKey(id, type);
+      
+      const title = modalItem ? (modalItem.title || modalItem.name || '') : 'Unknown';
+      const poster = modalItem ? posterUrl(modalItem.poster_path, 'w342') : null;
+      const backdrop = modalItem ? backdropUrl(modalItem.backdrop_path, 'w780') : null;
+      
+      let entry = progress[key] || {
+        id,
+        imdbId,
+        type,
+        title,
+        poster,
+        backdrop,
+        season,
+        episode,
+        currentTime: 0,
+        duration: playerDuration,
+        updatedAt: Date.now(),
+        provider: provider
+      };
+      
+      entry.season = season;
+      entry.episode = episode;
+      entry.currentTime = playerCurrentTime;
+      entry.duration = playerDuration;
+      entry.updatedAt = Date.now();
+      entry.provider = provider;
+      if (imdbId) {
+        entry.imdbId = imdbId;
+      }
+      
+      if (isCompleted) {
+        entry.completed = true;
+        
+        if (type === 'tv') {
+          const nextEpNum = episode + 1;
+          const epSel = document.getElementById('player-episode-select') || document.getElementById('episode-select');
+          const hasNextEpInSeason = epSel && epSel.querySelector(`option[value="${nextEpNum}"]`);
+          
+          if (hasNextEpInSeason) {
+            entry.nextSeason = season;
+            entry.nextEpisode = nextEpNum;
+          } else {
+            const nextSeasonNum = season + 1;
+            const seasonSel = document.getElementById('player-season-select') || document.getElementById('season-select');
+            const hasNextSeason = seasonSel && seasonSel.querySelector(`option[value="${nextSeasonNum}"]`);
+            if (hasNextSeason) {
+              entry.nextSeason = nextSeasonNum;
+              entry.nextEpisode = 1;
+            } else {
+              entry.nextSeason = null;
+              entry.nextEpisode = null;
+            }
+          }
+        }
+      } else {
+        entry.completed = false;
+      }
+      
+      progress[key] = entry;
+      saveAllProgress(progress);
+    }
+
+    function startHeartbeat() {
+      stopHeartbeat(false);
+      heartbeatInterval = setInterval(() => {
+        playerCurrentTime += 5;
+        if (playerDuration && playerCurrentTime >= playerDuration * 0.9) {
+          saveProgress(true);
+          stopHeartbeat(false);
+        } else {
+          saveProgress(false);
+        }
+      }, 5000);
+    }
+
+    function stopHeartbeat(flush = true) {
+      if (heartbeatInterval) {
+        clearInterval(heartbeatInterval);
+        heartbeatInterval = null;
+      }
+      if (flush) {
+        saveProgress(false);
+      }
+    }
+
+    function getLatestTVProgress(id) {
+      const imdbId = getImdbId();
+      const match = findProgressEntry(id, 'tv', imdbId);
+      return match ? match.entry : null;
+    }
+
+    function formatTime(seconds) {
+      if (!seconds || isNaN(seconds)) return '0:00';
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = Math.floor(seconds % 60);
+      const pad = val => String(val).padStart(2, '0');
+      if (h > 0) {
+        return `${h}:${pad(m)}:${pad(s)}`;
+      }
+      return `${m}:${pad(s)}`;
+    }
+
+    function updateModalPlayButton() {
+      if (!currentModal) return;
+      const { id, type } = currentModal;
+      const watchBtn = document.getElementById('modal-watch-btn');
+      const restartBtn = document.getElementById('modal-restart-btn');
+      if (!watchBtn) return;
+
+      if (type === 'movie') {
+        const prog = getProgress(id, 'movie');
+        if (prog && prog.currentTime > 0) {
+          watchBtn.innerHTML = `▶ Resume from ${formatTime(prog.currentTime)}`;
+          watchBtn.onclick = () => openPlayer(false);
+          if (restartBtn) restartBtn.style.display = 'flex';
+        } else {
+          watchBtn.innerHTML = `<span id="play-btn-icon">▶</span> Watch Now`;
+          watchBtn.onclick = () => openPlayer(false);
+          if (restartBtn) restartBtn.style.display = 'none';
+        }
+      } else if (type === 'tv') {
+        const sSel = document.getElementById('season-select');
+        const eSel = document.getElementById('episode-select');
+        const season = sSel ? parseInt(sSel.value) || 1 : 1;
+        const episode = eSel ? parseInt(eSel.value) || 1 : 1;
+        const prog = getProgress(id, 'tv', season, episode);
+        if (prog && prog.currentTime > 0 && !prog.completed) {
+          watchBtn.innerHTML = `▶ Resume from ${formatTime(prog.currentTime)}`;
+          watchBtn.onclick = () => openPlayer(false);
+          if (restartBtn) restartBtn.style.display = 'flex';
+        } else {
+          watchBtn.innerHTML = `▶ Watch Episode ${episode}`;
+          watchBtn.onclick = () => openPlayer(false);
+          if (restartBtn) restartBtn.style.display = 'none';
+        }
+      }
+    }
+
+    function renderContinueWatching() {
+      const progress = getAllProgress();
+      const container = document.getElementById('cw-section');
+      const track = document.getElementById('cw-track');
+      if (!container || !track) return;
+
+      const entries = Object.keys(progress)
+        .map(key => ({ key, ...progress[key] }))
+        .sort((a, b) => b.updatedAt - a.updatedAt);
+
+      if (entries.length === 0) {
+        container.style.display = 'none';
+        return;
+      }
+
       container.style.display = 'block';
-      list.innerHTML = '';
-      history.slice(0, 5).forEach(item => {
+      track.innerHTML = '';
+
+      entries.forEach(entry => {
         const div = document.createElement('div');
-        div.className = 'history-item';
-        div.onclick = () => openModal(item.id, item.type, null, true, item.season, item.episode);
+        div.className = 'cw-card';
+
+        let displaySeason = entry.season;
+        let displayEpisode = entry.episode;
+        let isCompleted = entry.completed;
+        let progressPercent = 0;
+
+        if (entry.type === 'tv') {
+          if (entry.completed && entry.nextSeason && entry.nextEpisode) {
+            displaySeason = entry.nextSeason;
+            displayEpisode = entry.nextEpisode;
+            isCompleted = false;
+            progressPercent = 0;
+          } else if (entry.completed) {
+            progressPercent = 100;
+          } else {
+            progressPercent = entry.duration ? Math.min(100, (entry.currentTime / entry.duration) * 100) : 0;
+          }
+        } else {
+          progressPercent = entry.duration ? Math.min(100, (entry.currentTime / entry.duration) * 100) : 0;
+        }
+
+        let clickArgs = `${entry.id}, '${entry.type}', null, true`;
+        if (entry.type === 'tv') {
+          clickArgs += `, ${displaySeason}, ${displayEpisode}`;
+        }
+        div.setAttribute('onclick', `openModal(${clickArgs})`);
+
+        let epLabelHtml = '';
+        let subtitleText = '';
+        if (entry.type === 'tv') {
+          if (entry.completed && !entry.nextSeason) {
+            epLabelHtml = `<div class="cw-ep-label">✓ S${entry.season}:E${entry.episode}</div>`;
+            subtitleText = 'Finished Season';
+          } else {
+            epLabelHtml = `<div class="cw-ep-label">S${displaySeason}:E${displayEpisode}</div>`;
+            subtitleText = isCompleted ? 'Completed' : (progressPercent > 0 ? `Resume at ${formatTime(entry.currentTime)}` : 'Start Watching');
+          }
+        } else {
+          if (entry.completed) {
+            epLabelHtml = `<div class="cw-ep-label">✓ Completed</div>`;
+            subtitleText = 'Watched';
+          } else {
+            subtitleText = progressPercent > 0 ? `Resume at ${formatTime(entry.currentTime)}` : 'Start Watching';
+          }
+        }
+
+        const imageSrc = entry.backdrop || entry.poster;
+
         div.innerHTML = `
-      ${item.poster ? `<img class="history-thumb" src="${escHtml(item.poster)}" alt="">` : '<div class="history-thumb" style="background:var(--bg-elevated);display:flex;align-items:center;justify-content:center">🎬</div>'}
-      <div class="history-info">
-        <div class="history-title">${escHtml(item.title)}</div>
-        <div class="history-sub">${item.type === 'tv' ? `S${item.season || 1}E${item.episode || 1} · ` : ''}Watched recently</div>
-      </div>
-      <div class="history-play">▶</div>
-    `;
-        list.appendChild(div);
+          <div class="cw-card-thumb">
+            ${imageSrc 
+              ? `<img src="${escHtml(imageSrc)}" alt="${escHtml(entry.title)}" loading="lazy">` 
+              : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;background:var(--bg-elevated)">🎬</div>`
+            }
+            <div class="cw-resume-badge">▶ Resume</div>
+            ${epLabelHtml}
+            <button class="cw-dismiss" onclick="event.stopPropagation(); removeFromContinueWatching('${entry.key}')" title="Remove">✕</button>
+            ${entry.duration ? `
+              <div class="cw-progress-bar">
+                <div class="cw-progress-fill" style="width: ${progressPercent}%"></div>
+              </div>
+            ` : ''}
+          </div>
+          <div class="cw-info">
+            <div class="cw-title">${escHtml(entry.title)}</div>
+            <div class="cw-subtitle">${subtitleText}</div>
+          </div>
+        `;
+
+        track.appendChild(div);
       });
+    }
+
+    function removeFromContinueWatching(key) {
+      const progress = getAllProgress();
+      const entry = progress[key];
+      delete progress[key];
+      saveAllProgress(progress);
+      
+      if (entry) {
+        let hist = getHistory().filter(i => i.id !== entry.id);
+        saveHistory(hist);
+      }
+      renderContinueWatching();
+      showToast('Item removed', 'success');
     }
 
     // ==================== MOVIES PAGE ====================
@@ -4396,7 +4814,27 @@
     async function openModal(id, type, itemData, autoWatch = false, initSeason = 1, initEpisode = 1) {
       modalItem = itemData;
       currentModal = { id, type };
-      modalProvider = settings.provider || 'vidking';
+
+      // Resolve TV season/episode and provider from saved progress
+      if (type === 'tv' && initSeason === 1 && initEpisode === 1) {
+        const latest = getLatestTVProgress(id);
+        if (latest) {
+          if (latest.completed && latest.nextSeason && latest.nextEpisode) {
+            initSeason = latest.nextSeason;
+            initEpisode = latest.nextEpisode;
+          } else {
+            initSeason = latest.season || 1;
+            initEpisode = latest.episode || 1;
+          }
+        }
+      }
+
+      const latestProg = type === 'tv' ? getLatestTVProgress(id) : getProgress(id, 'movie');
+      if (latestProg && latestProg.provider) {
+        modalProvider = latestProg.provider;
+      } else {
+        modalProvider = settings.provider || 'vidking';
+      }
 
       // Reset provider tabs
       document.querySelectorAll('.provider-tab').forEach(t => t.classList.remove('active'));
@@ -4412,6 +4850,30 @@
       document.getElementById('modal-backdrop-placeholder').style.display = 'block';
       const oldImg = document.getElementById('modal-backdrop-img');
       if (oldImg) oldImg.remove();
+
+      // Initialize Watch/Restart buttons
+      const watchBtn = document.getElementById('modal-watch-btn');
+      if (watchBtn) {
+        watchBtn.innerHTML = `<span id="play-btn-icon">▶</span> Watch Now`;
+        watchBtn.onclick = () => openPlayer(false);
+      }
+      let restartBtn = document.getElementById('modal-restart-btn');
+      if (restartBtn) {
+        restartBtn.style.display = 'none';
+      } else {
+        const actions = document.querySelector('.modal-actions');
+        if (actions) {
+          restartBtn = document.createElement('button');
+          restartBtn.id = 'modal-restart-btn';
+          restartBtn.className = 'watchlist-btn';
+          restartBtn.style.display = 'none';
+          restartBtn.innerHTML = `↺ Restart`;
+          restartBtn.onclick = () => openPlayer(true);
+          const wlBtn = document.getElementById('watchlist-toggle-btn');
+          if (wlBtn) actions.insertBefore(restartBtn, wlBtn);
+          else actions.appendChild(restartBtn);
+        }
+      }
 
       document.getElementById('tv-controls').style.display = 'none';
       document.getElementById('modal-overlay').classList.add('open');
@@ -4468,6 +4930,8 @@
           await loadEpisodes(selectedSeason, modalProvider, initEpisode);
         }
 
+        updateModalPlayButton();
+
         if (autoWatch) { setTimeout(openPlayer, 200); }
       } catch (e) {
         console.error('Modal load error:', e);
@@ -4498,6 +4962,10 @@
 
     async function onPlayerSeasonChange() {
       if (!currentPlayer || currentPlayer.type !== 'tv') return;
+
+      // Stop old heartbeat and flush final time
+      stopHeartbeat(true);
+
       const season = parseInt(document.getElementById('player-season-select').value) || 1;
       currentPlayer.season = season;
       await loadEpisodes(season, currentPlayer.provider, 1);
@@ -4511,14 +4979,36 @@
         currentPlayer.episode = parseInt(playerEpisodeSel.value) || 1;
       }
       updatePlayerSubtitle();
+
+      // Load progress or start fresh for new episode
+      const savedProg = getProgress(currentPlayer.id, currentPlayer.type, currentPlayer.season, currentPlayer.episode);
+      playerCurrentTime = (savedProg && !savedProg.completed) ? (savedProg.currentTime || 0) : 0;
+
+      // Save progress immediately and restart heartbeat
+      saveProgress(false);
+      startHeartbeat();
+
       loadPlayerIframe(currentPlayer.provider);
     }
 
     function onPlayerEpisodeChange() {
       if (!currentPlayer || currentPlayer.type !== 'tv') return;
+
+      // Stop old heartbeat and flush final time
+      stopHeartbeat(true);
+
       const episode = parseInt(document.getElementById('player-episode-select').value) || 1;
       currentPlayer.episode = episode;
       updatePlayerSubtitle();
+
+      // Load progress or start fresh for new episode
+      const savedProg = getProgress(currentPlayer.id, currentPlayer.type, currentPlayer.season, currentPlayer.episode);
+      playerCurrentTime = (savedProg && !savedProg.completed) ? (savedProg.currentTime || 0) : 0;
+
+      // Save progress immediately and restart heartbeat
+      saveProgress(false);
+      startHeartbeat();
+
       loadPlayerIframe(currentPlayer.provider);
     }
 
@@ -4579,6 +5069,7 @@
       } finally {
         if (seasonSel) seasonSel.disabled = false;
         if (playerSeasonSel) playerSeasonSel.disabled = false;
+        updateModalPlayButton();
       }
     }
 
@@ -4643,7 +5134,7 @@
     }
 
     // ==================== PLAYER ====================
-    function openPlayer() {
+    function openPlayer(fromBeginning = false) {
       if (!currentModal) return;
       const { id, type } = currentModal;
       let season = 1, episode = 1;
@@ -4655,8 +5146,26 @@
         episode = es ? parseInt(es.value) || 1 : 1;
       }
 
-      currentPlayer = { id, type, season, episode, provider: modalProvider };
+      currentPlayer = { id, type, season, episode, provider: modalProvider, imdbId: getImdbId() };
       const title = modalItem ? (modalItem.title || modalItem.name || '') : 'Now Playing';
+
+      // Setup simulated playback duration
+      if (type === 'movie') {
+        playerDuration = modalItem && modalItem.runtime ? modalItem.runtime * 60 : 120 * 60;
+      } else {
+        playerDuration = modalItem && modalItem.episode_run_time && modalItem.episode_run_time[0] ? modalItem.episode_run_time[0] * 60 : 45 * 60;
+      }
+
+      // Check for saved progress to resume or start fresh
+      const savedProg = getProgress(id, type, season, episode);
+      if (savedProg && !fromBeginning) {
+        playerCurrentTime = savedProg.completed ? 0 : (savedProg.currentTime || 0);
+      } else {
+        playerCurrentTime = 0;
+      }
+
+      // Save progress immediately so it shows up in Continue Watching row at 0%
+      saveProgress(false);
 
       // Update player UI
       document.getElementById('player-title').textContent = title;
@@ -4694,9 +5203,12 @@
       document.body.style.overflow = 'hidden';
       closeModal();
 
-      // Add to history
+      // Add to history (classic)
       const poster = modalItem ? posterUrl(modalItem.poster_path, 'w92') : null;
       addToHistory({ id, type, title, poster, season, episode });
+
+      // Start tracking progress via heartbeat
+      startHeartbeat();
     }
 
     function loadPlayerIframe(provider) {
@@ -4738,9 +5250,15 @@
     }
 
     function closePlayer() {
+      // Stop heartbeat and save progress
+      stopHeartbeat(true);
+
       document.getElementById('player-overlay').classList.remove('open');
       document.getElementById('player-iframe').src = 'about:blank';
       document.body.style.overflow = '';
+
+      // Refresh the continue watching row
+      renderContinueWatching();
     }
 
     // ==================== SETTINGS PANEL ====================
@@ -4895,6 +5413,7 @@
 
       // Bind row carousel controls
       const mappings = [
+        ['cw-prev', 'cw-next', 'cw-track'],
         ['trending-prev', 'trending-next', 'row-trending'],
         ['popular-movies-prev', 'popular-movies-next', 'row-popular-movies'],
         ['toprated-movies-prev', 'toprated-movies-next', 'row-toprated-movies'],
