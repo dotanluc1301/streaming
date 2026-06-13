@@ -12,6 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
   <link rel="shortcut icon" type="image/x-icon" href="https://www.svgrepo.com/show/285829/popcorn.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
   <style>
     /* ==================== DESIGN SYSTEM ==================== */
     :root {
@@ -1519,6 +1520,32 @@
       border-color: var(--accent-1);
     }
 
+    .player-action-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .player-action-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--accent-1);
+    }
+
+    .player-action-btn.active {
+      border-color: var(--accent-2);
+      color: var(--text-primary);
+    }
+
     .player-title-bar {
       flex: 1;
       font-weight: 600;
@@ -2042,10 +2069,12 @@
       position: relative;
       transition: transform var(--transition), box-shadow var(--transition);
     }
+
     .cw-card:hover {
       transform: translateY(-6px) scale(1.02);
       box-shadow: var(--shadow-md), var(--shadow-glow);
     }
+
     .cw-card-thumb {
       aspect-ratio: 16/9;
       position: relative;
@@ -2054,15 +2083,18 @@
       background: var(--bg-elevated);
       border: 1px solid var(--border);
     }
+
     .cw-card-thumb img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.4s ease;
     }
+
     .cw-card:hover .cw-card-thumb img {
       transform: scale(1.05);
     }
+
     .cw-progress-bar {
       position: absolute;
       bottom: 0;
@@ -2072,11 +2104,13 @@
       background: rgba(255, 255, 255, 0.15);
       z-index: 2;
     }
+
     .cw-progress-fill {
       height: 100%;
       background: var(--accent-grad);
       transition: width 0.3s ease;
     }
+
     .cw-resume-badge {
       position: absolute;
       top: 50%;
@@ -2097,10 +2131,12 @@
       pointer-events: none;
       z-index: 3;
     }
+
     .cw-card:hover .cw-resume-badge {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
     }
+
     .cw-ep-label {
       position: absolute;
       top: 8px;
@@ -2115,6 +2151,7 @@
       border: 1px solid var(--border);
       z-index: 2;
     }
+
     .cw-dismiss {
       position: absolute;
       top: 8px;
@@ -2134,17 +2171,21 @@
       z-index: 4;
       font-size: 0.8rem;
     }
+
     .cw-card:hover .cw-dismiss {
       opacity: 1;
     }
+
     .cw-dismiss:hover {
       background: rgba(219, 39, 119, 0.3);
       border-color: var(--accent-2);
       color: #fff;
     }
+
     .cw-info {
       padding: 10px 2px 0;
     }
+
     .cw-title {
       font-size: 0.88rem;
       font-weight: 600;
@@ -2154,6 +2195,7 @@
       white-space: nowrap;
       margin-bottom: 3px;
     }
+
     .cw-subtitle {
       font-size: 0.78rem;
       color: var(--text-secondary);
@@ -2278,7 +2320,8 @@
         overflow-y: auto;
         overflow-x: hidden;
         align-content: start;
-        scrollbar-width: none; /* Firefox: hide scrollbar visually */
+        scrollbar-width: none;
+        /* Firefox: hide scrollbar visually */
       }
 
       .anime-carousel-track::-webkit-scrollbar {
@@ -2296,7 +2339,8 @@
       }
 
       .anime-carousel-track .card-poster {
-        flex: 0 0 30%;  /* locked width — never grows, never shrinks, always 30% */
+        flex: 0 0 30%;
+        /* locked width — never grows, never shrinks, always 30% */
         overflow: hidden;
         border-radius: var(--radius-md) 0 0 var(--radius-md);
       }
@@ -2371,6 +2415,7 @@
         <button class="nav-tab" id="tab-tvshows" onclick="showPage('tvshows')">TV Shows</button>
         <button class="nav-tab" id="tab-genres" onclick="showPage('genres')">Genres</button>
         <button class="nav-tab" id="tab-watchlist" onclick="showPage('watchlist')">Watchlist</button>
+        <button class="nav-tab" id="tab-favorite" onclick="showPage('favorite')">Favourite</button>
       </div>
       <div class="nav-actions">
         <button class="nav-btn" onclick="toggleSettings()" title="Settings">⚙️</button>
@@ -2897,6 +2942,19 @@
       </div>
     </div>
 
+    <!-- ===== FAVORITE PAGE ===== -->
+    <div id="page-favorite" class="page">
+      <div style="padding: 20px 0">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-accent"></div>My Favourite
+          </div>
+          <button class="section-more" onclick="clearFavorites()">Clear All</button>
+        </div>
+        <div id="favorite-container"></div>
+      </div>
+    </div>
+
     <!-- ===== SEARCH RESULTS PAGE ===== -->
     <div id="page-search" class="page">
       <div style="padding: 20px 0">
@@ -2987,7 +3045,10 @@
         <div class="modal-actions">
           <button class="watch-btn" id="modal-watch-btn" onclick="openPlayer()">▶ Watch Now</button>
           <button class="watchlist-btn" id="watchlist-toggle-btn" onclick="toggleWatchlist()">
-            <span id="watchlist-icon">＋</span> Watchlist
+            <i class="fa fa-bookmark-o" id="watchlist-icon" aria-hidden="true"></i> Watchlist
+          </button>
+          <button class="watchlist-btn" id="favorite-toggle-btn" onclick="toggleFavorite()">
+            <span id="favorite-icon">♡</span> Favourite
           </button>
         </div>
       </div>
@@ -2998,6 +3059,12 @@
   <div id="player-overlay">
     <div class="player-topbar">
       <button class="player-back" onclick="closePlayer()">← Back</button>
+      <button class="player-action-btn" id="player-watchlist-btn" onclick="toggleWatchlist()" title="Add to Watchlist">
+        <i class="fa fa-bookmark-o" aria-hidden="true"></i>
+      </button>
+      <button class="player-action-btn" id="player-favorite-btn" onclick="toggleFavorite()" title="Add to Favorite">
+        ♡
+      </button>
       <div class="player-title-wrap">
         <div class="player-title-meta">
           <div class="player-title-bar" id="player-title">Loading…</div>
@@ -3176,24 +3243,304 @@
 
     function getApiKey() { return settings.apiKey || DEFAULT_API_KEY; }
 
-    // ==================== WATCHLIST ====================
+    // ==================== WATCHLIST & FAVORITES (TMDB SYNCED) ====================
+    let tmdbWatchlist = [];
+    let tmdbFavorites = [];
+
+    function loadWatchlistAndFavorites() {
+      try {
+        tmdbWatchlist = JSON.parse(localStorage.getItem('cinestream_tmdb_watchlist') || '[]');
+        tmdbFavorites = JSON.parse(localStorage.getItem('cinestream_tmdb_favorites') || '[]');
+      } catch (e) {
+        tmdbWatchlist = [];
+        tmdbFavorites = [];
+      }
+    }
+
+    function saveWatchlistAndFavoritesToLocalStorage() {
+      localStorage.setItem('cinestream_tmdb_watchlist', JSON.stringify(tmdbWatchlist));
+      localStorage.setItem('cinestream_tmdb_favorites', JSON.stringify(tmdbFavorites));
+    }
+
     function getWatchlist() {
-      try { return JSON.parse(localStorage.getItem('cinestream_watchlist') || '[]'); } catch (e) { return []; }
+      return tmdbWatchlist;
     }
-    function saveWatchlist(list) { localStorage.setItem('cinestream_watchlist', JSON.stringify(list)); }
-    function isInWatchlist(id) { return getWatchlist().some(i => i.id === id); }
-    function addToWatchlist(item) {
-      const list = getWatchlist();
-      if (!list.some(i => i.id === item.id)) { list.unshift(item); saveWatchlist(list); }
+
+    function isInWatchlist(id) {
+      return tmdbWatchlist.some(item => String(item.id) === String(id));
     }
-    function removeFromWatchlist(id) {
-      const list = getWatchlist().filter(i => i.id !== id);
-      saveWatchlist(list);
+
+    function isFavorite(id) {
+      return tmdbFavorites.some(item => String(item.id) === String(id));
     }
-    function clearWatchlist() {
-      saveWatchlist([]);
-      if (document.getElementById('page-watchlist').classList.contains('active')) renderWatchlist();
-      showToast('Watchlist cleared', 'success');
+
+    async function fetchAllTMDBPages(path) {
+      let page = 1;
+      let results = [];
+      while (true) {
+        try {
+          const data = await tmdb(path, { page });
+          if (!data.results || data.results.length === 0) break;
+          results.push(...data.results);
+          if (page >= data.total_pages) break;
+          page++;
+        } catch (e) {
+          console.error(`Error fetching page ${page} of ${path}:`, e);
+          break;
+        }
+      }
+      return results;
+    }
+
+    async function syncWatchlistAndFavorites() {
+      try {
+        const [wlMovies, wlTv, favMovies, favTv] = await Promise.all([
+          fetchAllTMDBPages(`/account/23170597/watchlist/movies`),
+          fetchAllTMDBPages(`/account/23170597/watchlist/tv`),
+          fetchAllTMDBPages(`/account/23170597/favorite/movies`),
+          fetchAllTMDBPages(`/account/23170597/favorite/tv`)
+        ]);
+
+        tmdbWatchlist = [
+          ...wlMovies.map(m => ({ ...m, media_type: 'movie' })),
+          ...wlTv.map(t => ({ ...t, media_type: 'tv' }))
+        ];
+        tmdbFavorites = [
+          ...favMovies.map(m => ({ ...m, media_type: 'movie' })),
+          ...favTv.map(t => ({ ...t, media_type: 'tv' }))
+        ];
+
+        saveWatchlistAndFavoritesToLocalStorage();
+
+        if (document.getElementById('page-watchlist').classList.contains('active')) {
+          renderWatchlist();
+        }
+        const favPage = document.getElementById('page-favorite');
+        if (favPage && favPage.classList.contains('active')) {
+          renderFavorite();
+        }
+
+        // Sync open modal buttons if modal is open
+        if (currentModal) {
+          updateWatchlistBtn(currentModal.id);
+          updateFavoriteBtn(currentModal.id);
+        }
+        if (currentPlayer) {
+          updatePlayerWatchlistBtn(currentPlayer.id);
+          updatePlayerFavoriteBtn(currentPlayer.id);
+        }
+      } catch (e) {
+        console.error('Failed to sync watchlist/favorites with TMDB:', e);
+      }
+    }
+
+    function updateWatchlistUIState(id, isWatchlisted) {
+      const btn = document.getElementById('watchlist-toggle-btn');
+      const icon = document.getElementById('watchlist-icon');
+      if (btn && icon) {
+        if (isWatchlisted) {
+          btn.classList.add('saved');
+          icon.className = 'fa fa-bookmark';
+          btn.childNodes[btn.childNodes.length - 1].textContent = ' Saved';
+        } else {
+          btn.classList.remove('saved');
+          icon.className = 'fa fa-bookmark-o';
+          btn.childNodes[btn.childNodes.length - 1].textContent = ' Watchlist';
+        }
+      }
+
+      const pBtn = document.getElementById('player-watchlist-btn');
+      if (pBtn) {
+        pBtn.classList.toggle('active', isWatchlisted);
+        const pIcon = pBtn.querySelector('i');
+        if (pIcon) {
+          pIcon.className = isWatchlisted ? 'fa fa-bookmark' : 'fa fa-bookmark-o';
+        }
+      }
+    }
+
+    function updateFavoriteUIState(id, isFav) {
+      const btn = document.getElementById('favorite-toggle-btn');
+      const icon = document.getElementById('favorite-icon');
+      if (btn && icon) {
+        if (isFav) {
+          btn.classList.add('saved');
+          icon.textContent = '❤️';
+          btn.childNodes[btn.childNodes.length - 1].textContent = ' Favorited';
+        } else {
+          btn.classList.remove('saved');
+          icon.textContent = '♡';
+          btn.childNodes[btn.childNodes.length - 1].textContent = ' Favourite';
+        }
+      }
+
+      const pBtn = document.getElementById('player-favorite-btn');
+      if (pBtn) {
+        pBtn.classList.toggle('active', isFav);
+        pBtn.textContent = isFav ? '❤️' : '♡';
+      }
+    }
+
+    function updateWatchlistBtn(id) {
+      updateWatchlistUIState(id, isInWatchlist(id));
+    }
+
+    function updatePlayerWatchlistBtn(id) {
+      updateWatchlistUIState(id, isInWatchlist(id));
+    }
+
+    function updateFavoriteBtn(id) {
+      updateFavoriteUIState(id, isFavorite(id));
+    }
+
+    function updatePlayerFavoriteBtn(id) {
+      updatePlayerFavoriteBtnState(id);
+    }
+
+    function updatePlayerFavoriteBtnState(id) {
+      updateFavoriteUIState(id, isFavorite(id));
+    }
+
+    async function toggleWatchlist() {
+      const id = currentModal ? currentModal.id : (currentPlayer ? currentPlayer.id : null);
+      const type = currentModal ? currentModal.type : (currentPlayer ? currentPlayer.type : null);
+      if (!id || !type) return;
+
+      const wasWatchlisted = isInWatchlist(id);
+      const isWatchlist = !wasWatchlisted;
+
+      // Optimistic update of UI
+      updateWatchlistUIState(id, isWatchlist);
+
+      try {
+        const result = await tmdb(`/account/23170597/watchlist`, {}, 'POST', {
+          media_type: type,
+          media_id: parseInt(id),
+          watchlist: isWatchlist
+        });
+
+        if (result.success) {
+          if (isWatchlist) {
+            if (!tmdbWatchlist.some(item => String(item.id) === String(id))) {
+              const title = modalItem ? (modalItem.title || modalItem.name || '') : 'Unknown';
+              const poster = modalItem ? posterUrl(modalItem.poster_path) : null;
+              const rating = modalItem ? modalItem.vote_average : null;
+              const year = modalItem ? (modalItem.release_date || modalItem.first_air_date || '').slice(0, 4) : '';
+              tmdbWatchlist.unshift({ id, type, title, poster, rating, year });
+            }
+            showToast('Added to watchlist ✓', 'success');
+          } else {
+            tmdbWatchlist = tmdbWatchlist.filter(item => String(item.id) !== String(id));
+            showToast('Removed from watchlist', 'success');
+          }
+          saveWatchlistAndFavoritesToLocalStorage();
+          updateWatchlistBtn(id);
+          updatePlayerWatchlistBtn(id);
+          if (document.getElementById('page-watchlist').classList.contains('active')) renderWatchlist();
+        } else {
+          throw new Error('API returned failure status');
+        }
+      } catch (e) {
+        console.error('Watchlist API error:', e);
+        showToast('Failed to update watchlist', 'error');
+        updateWatchlistUIState(id, wasWatchlisted);
+      }
+    }
+
+    async function toggleFavorite() {
+      const id = currentModal ? currentModal.id : (currentPlayer ? currentPlayer.id : null);
+      const type = currentModal ? currentModal.type : (currentPlayer ? currentPlayer.type : null);
+      if (!id || !type) return;
+
+      const wasFavorite = isFavorite(id);
+      const isFav = !wasFavorite;
+
+      // Optimistic update of UI
+      updateFavoriteUIState(id, isFav);
+
+      try {
+        const result = await tmdb(`/account/23170597/favorite`, {}, 'POST', {
+          media_type: type,
+          media_id: parseInt(id),
+          favorite: isFav
+        });
+
+        if (result.success) {
+          if (isFav) {
+            if (!tmdbFavorites.some(item => String(item.id) === String(id))) {
+              const title = modalItem ? (modalItem.title || modalItem.name || '') : 'Unknown';
+              const poster = modalItem ? posterUrl(modalItem.poster_path) : null;
+              const rating = modalItem ? modalItem.vote_average : null;
+              const year = modalItem ? (modalItem.release_date || modalItem.first_air_date || '').slice(0, 4) : '';
+              tmdbFavorites.unshift({ id, type, title, poster, rating, year });
+            }
+            showToast('Added to favorites ❤️', 'success');
+          } else {
+            tmdbFavorites = tmdbFavorites.filter(item => String(item.id) !== String(id));
+            showToast('Removed from favorites', 'success');
+          }
+          saveWatchlistAndFavoritesToLocalStorage();
+          updateFavoriteBtn(id);
+          updatePlayerFavoriteBtnState(id);
+          const favPage = document.getElementById('page-favorite');
+          if (favPage && favPage.classList.contains('active')) renderFavorite();
+        } else {
+          throw new Error('API returned failure status');
+        }
+      } catch (e) {
+        console.error('Favorite API error:', e);
+        showToast('Failed to update favorites', 'error');
+        updateFavoriteUIState(id, wasFavorite);
+      }
+    }
+
+    async function clearWatchlist() {
+      const list = [...tmdbWatchlist];
+      if (list.length === 0) return;
+
+      showToast('Clearing watchlist...', 'info');
+      try {
+        await Promise.all(list.map(item =>
+          tmdb(`/account/23170597/watchlist`, {}, 'POST', {
+            media_type: item.type,
+            media_id: parseInt(item.id),
+            watchlist: false
+          })
+        ));
+        tmdbWatchlist = [];
+        saveWatchlistAndFavoritesToLocalStorage();
+        if (document.getElementById('page-watchlist').classList.contains('active')) renderWatchlist();
+        showToast('Watchlist cleared', 'success');
+      } catch (e) {
+        console.error('Error clearing watchlist:', e);
+        showToast('Failed to clear some watchlist items', 'error');
+        syncWatchlistAndFavorites();
+      }
+    }
+
+    async function clearFavorites() {
+      const list = [...tmdbFavorites];
+      if (list.length === 0) return;
+
+      showToast('Clearing favorites...', 'info');
+      try {
+        await Promise.all(list.map(item =>
+          tmdb(`/account/23170597/favorite`, {}, 'POST', {
+            media_type: item.type,
+            media_id: parseInt(item.id),
+            favorite: false
+          })
+        ));
+        tmdbFavorites = [];
+        saveWatchlistAndFavoritesToLocalStorage();
+        const favPage = document.getElementById('page-favorite');
+        if (favPage && favPage.classList.contains('active')) renderFavorite();
+        showToast('Favorites cleared', 'success');
+      } catch (e) {
+        console.error('Error clearing favorites:', e);
+        showToast('Failed to clear some favorites', 'error');
+        syncWatchlistAndFavorites();
+      }
     }
 
     // ==================== HISTORY ====================
@@ -3215,15 +3562,21 @@
     }
 
     // ==================== TMDB API ====================
-    async function tmdb(path, params = {}) {
+    async function tmdb(path, params = {}, method = 'GET', body = null) {
       const url = new URL(TMDB_BASE + path);
       url.searchParams.set('api_key', getApiKey());
       for (const [k, v] of Object.entries(params)) {
         if (v !== null && v !== undefined && v !== '') url.searchParams.set(k, v);
       }
-      const res = await fetch(url.toString(), {
+      const options = {
+        method,
         headers: { Authorization: `Bearer ${DEFAULT_READ_TOKEN}` }
-      });
+      };
+      if (body) {
+        options.headers['Content-Type'] = 'application/json;charset=utf-8';
+        options.body = JSON.stringify(body);
+      }
+      const res = await fetch(url.toString(), options);
       if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
       return res.json();
     }
@@ -3499,6 +3852,7 @@
       if (page === 'tvshows' && !tvPage.__init) { loadTVPage(); tvPage.__init = true; }
       if (page === 'genres') renderGenresPage();
       if (page === 'watchlist') renderWatchlist();
+      if (page === 'favorite') renderFavorite();
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -3506,6 +3860,8 @@
     // ==================== HOME PAGE INIT ====================
     async function initHome() {
       try {
+        // Sync watchlist and favorites with TMDB
+        syncWatchlistAndFavorites();
         // Load genres
         const [
           movieGenreData,
@@ -4219,7 +4575,7 @@
       const match = findProgressEntry(id, type, imdbId);
       if (!match) return null;
       const entry = match.entry;
-      
+
       if (type === 'tv' && season !== undefined && episode !== undefined) {
         if (Number(entry.season) === Number(season) && Number(entry.episode) === Number(episode)) {
           return entry;
@@ -4232,15 +4588,15 @@
     function saveProgress(isCompleted = false) {
       if (!currentPlayer) return;
       const { id, type, season, episode, provider, imdbId } = currentPlayer;
-      
+
       const progress = getAllProgress();
       const match = findProgressEntry(id, type, imdbId);
       const key = match ? match.key : getProgressKey(id, type);
-      
+
       const title = modalItem ? (modalItem.title || modalItem.name || '') : 'Unknown';
       const poster = modalItem ? posterUrl(modalItem.poster_path, 'w342') : null;
       const backdrop = modalItem ? backdropUrl(modalItem.backdrop_path, 'w780') : null;
-      
+
       let entry = progress[key] || {
         id,
         imdbId,
@@ -4255,7 +4611,7 @@
         updatedAt: Date.now(),
         provider: provider
       };
-      
+
       entry.season = season;
       entry.episode = episode;
       entry.currentTime = playerCurrentTime;
@@ -4265,15 +4621,15 @@
       if (imdbId) {
         entry.imdbId = imdbId;
       }
-      
+
       if (isCompleted) {
         entry.completed = true;
-        
+
         if (type === 'tv') {
           const nextEpNum = episode + 1;
           const epSel = document.getElementById('player-episode-select') || document.getElementById('episode-select');
           const hasNextEpInSeason = epSel && epSel.querySelector(`option[value="${nextEpNum}"]`);
-          
+
           if (hasNextEpInSeason) {
             entry.nextSeason = season;
             entry.nextEpisode = nextEpNum;
@@ -4293,7 +4649,7 @@
       } else {
         entry.completed = false;
       }
-      
+
       progress[key] = entry;
       saveAllProgress(progress);
     }
@@ -4446,10 +4802,10 @@
 
         div.innerHTML = `
           <div class="cw-card-thumb">
-            ${imageSrc 
-              ? `<img src="${escHtml(imageSrc)}" alt="${escHtml(entry.title)}" loading="lazy">` 
-              : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;background:var(--bg-elevated)">🎬</div>`
-            }
+            ${imageSrc
+            ? `<img src="${escHtml(imageSrc)}" alt="${escHtml(entry.title)}" loading="lazy">`
+            : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;background:var(--bg-elevated)">🎬</div>`
+          }
             <div class="cw-resume-badge">▶ Resume</div>
             ${epLabelHtml}
             <button class="cw-dismiss" onclick="event.stopPropagation(); removeFromContinueWatching('${entry.key}')" title="Remove">✕</button>
@@ -4474,7 +4830,7 @@
       const entry = progress[key];
       delete progress[key];
       saveAllProgress(progress);
-      
+
       if (entry) {
         let hist = getHistory().filter(i => i.id !== entry.id);
         saveHistory(hist);
@@ -4806,6 +5162,30 @@
       container.appendChild(grid);
     }
 
+    // ==================== FAVORITE PAGE ====================
+    function renderFavorite() {
+      const list = tmdbFavorites;
+      const container = document.getElementById('favorite-container');
+      if (!container) return;
+      if (list.length === 0) {
+        container.innerHTML = `
+      <div class="watchlist-empty">
+        <div class="empty-icon">❤️</div>
+        <h3>Your favorite list is empty</h3>
+        <p>Browse content and add items to your favorites!</p>
+      </div>`;
+        return;
+      }
+      container.innerHTML = '';
+      const grid = document.createElement('div');
+      grid.className = 'media-grid';
+      list.forEach(item => {
+        const card = createCard({ id: item.id, title: item.title, name: item.title, poster_path: item.poster ? item.poster.replace(IMG_BASE + 'w342', '') : null, vote_average: item.rating, media_type: item.type, release_date: item.year ? item.year + '-01-01' : '' });
+        grid.appendChild(card);
+      });
+      container.appendChild(grid);
+    }
+
     // ==================== MODAL ====================
     let modalProvider = null;
     let modalSeasons = [];
@@ -4879,6 +5259,7 @@
       document.getElementById('modal-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
       updateWatchlistBtn(id);
+      updateFavoriteBtn(id);
 
       // Fetch full details (include external_ids to get IMDb id when available)
       try {
@@ -5100,38 +5481,7 @@
       } catch (e) { }
     }
 
-    function updateWatchlistBtn(id) {
-      const btn = document.getElementById('watchlist-toggle-btn');
-      const icon = document.getElementById('watchlist-icon');
-      if (!btn || !icon) return;
-      if (isInWatchlist(id)) {
-        btn.classList.add('saved');
-        icon.textContent = '✓';
-        btn.childNodes[btn.childNodes.length - 1].textContent = ' Saved';
-      } else {
-        btn.classList.remove('saved');
-        icon.textContent = '＋';
-        btn.childNodes[btn.childNodes.length - 1].textContent = ' Watchlist';
-      }
-    }
-
-    function toggleWatchlist() {
-      if (!currentModal) return;
-      const { id, type } = currentModal;
-      if (isInWatchlist(id)) {
-        removeFromWatchlist(id);
-        showToast('Removed from watchlist', 'success');
-      } else {
-        const title = modalItem ? (modalItem.title || modalItem.name || '') : 'Unknown';
-        const poster = modalItem ? posterUrl(modalItem.poster_path) : null;
-        const rating = modalItem ? modalItem.vote_average : null;
-        const year = modalItem ? (modalItem.release_date || modalItem.first_air_date || '').slice(0, 4) : '';
-        addToWatchlist({ id, type, title, poster, rating, year });
-        showToast('Added to watchlist ✓', 'success');
-      }
-      updateWatchlistBtn(id);
-      if (document.getElementById('page-watchlist').classList.contains('active')) renderWatchlist();
-    }
+    // Deleted duplicate watchlist update functions
 
     // ==================== PLAYER ====================
     function openPlayer(fromBeginning = false) {
@@ -5202,6 +5552,9 @@
       document.getElementById('player-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
       closeModal();
+
+      updatePlayerWatchlistBtn(id);
+      updatePlayerFavoriteBtn(id);
 
       // Add to history (classic)
       const poster = modalItem ? posterUrl(modalItem.poster_path, 'w92') : null;
@@ -5358,6 +5711,7 @@
       if (genreLoadMore) genreObserver.observe(genreLoadMore);
     }
     document.addEventListener('DOMContentLoaded', () => {
+      loadWatchlistAndFavorites();
       loadSettings();
       initSearch();
       setupInfiniteScroll();
