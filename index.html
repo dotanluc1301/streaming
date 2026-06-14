@@ -3608,6 +3608,16 @@
         .sort((a, b) => a.season_number - b.season_number);
     }
 
+    function normalizeLookupTitle(title) {
+      if (!title || typeof title !== 'string') return '';
+      let normalized = title.trim();
+      const suffixPattern = /[\s\-–—:]*\(?\s*(?:(?:part|season)\s*(?:\d+|\d+(?:st|nd|rd|th))|(?:\d+|\d+(?:st|nd|rd|th))\s*(?:part|season))\s*\)?$/i;
+      while (suffixPattern.test(normalized)) {
+        normalized = normalized.replace(suffixPattern, '').trim();
+      }
+      return normalized.replace(/[\s\-–—:]+$/g, '').trim();
+    }
+
     function renderSeasonOptions(seasons, selectedSeason) {
       const html = seasons.map(s => `<option value="${s.season_number}">Season ${s.season_number}${s.name ? ' — ' + escHtml(s.name) : ''}</option>`).join('');
       const selectedValue = seasons.some(s => Number(s.season_number) === Number(selectedSeason))
@@ -3725,10 +3735,11 @@
 
     // IMDb search by title (try a few possible endpoints)
     async function fetchImdbSearch(title) {
+      const lookupTitle = normalizeLookupTitle(title) || title || '';
       const tries = [
-        `${IMDB_API_BASE}/search/title?q=${encodeURIComponent(title)}`,
-        `${IMDB_API_BASE}/search?q=${encodeURIComponent(title)}`,
-        `${IMDB_API_BASE}/titles?name=${encodeURIComponent(title)}`
+        `${IMDB_API_BASE}/search/title?q=${encodeURIComponent(lookupTitle)}`,
+        `${IMDB_API_BASE}/search?q=${encodeURIComponent(lookupTitle)}`,
+        `${IMDB_API_BASE}/titles?name=${encodeURIComponent(lookupTitle)}`
       ];
       for (const url of tries) {
         try {
@@ -4083,6 +4094,7 @@
     // Open modal for anime item — try TMDB search by title first, fallback to Jikan details
     async function openAnimeModal(anime) {
       const title = anime.title || anime.title_english || anime.title_japanese || '';
+      const lookupTitle = normalizeLookupTitle(title) || title;
       // Basic modal visual state
       document.getElementById('modal-title').textContent = title || 'Loading…';
       document.getElementById('modal-meta').innerHTML = '';
@@ -4098,7 +4110,7 @@
       // Try TMDB search by title
       let handled = false;
       try {
-        const search = await tmdb('/search/multi', { query: title });
+        const search = await tmdb('/search/multi', { query: lookupTitle });
         const first = (search.results || [])[0];
         if (first && (first.media_type === 'movie' || first.media_type === 'tv')) {
           // Delegate to existing openModal to render full details
@@ -4112,7 +4124,7 @@
       if (!handled) {
         // Try IMDb search by title
         try {
-          const imdbSearch = await fetchImdbSearch(title);
+          const imdbSearch = await fetchImdbSearch(lookupTitle);
           let first = null;
           if (imdbSearch) {
             first = (imdbSearch.results && imdbSearch.results[0]) || (imdbSearch.items && imdbSearch.items[0]) || null;
@@ -5195,23 +5207,20 @@
       modalItem = itemData;
       currentModal = { id, type };
 
-      // Resolve TV season/episode and provider from saved progress
-      if (type === 'tv' && initSeason === 1 && initEpisode === 1) {
-        const latest = getLatestTVProgress(id);
-        if (latest) {
-          if (latest.completed && latest.nextSeason && latest.nextEpisode) {
-            initSeason = latest.nextSeason;
-            initEpisode = latest.nextEpisode;
-          } else {
-            initSeason = latest.season || 1;
-            initEpisode = latest.episode || 1;
-          }
+      // Resolve saved progress for the selected title
+      const savedProgress = type === 'tv' ? getLatestTVProgress(id) : getProgress(id, 'movie');
+      if (type === 'tv' && initSeason === 1 && initEpisode === 1 && savedProgress) {
+        if (savedProgress.completed && savedProgress.nextSeason && savedProgress.nextEpisode) {
+          initSeason = savedProgress.nextSeason;
+          initEpisode = savedProgress.nextEpisode;
+        } else {
+          initSeason = savedProgress.season || 1;
+          initEpisode = savedProgress.episode || 1;
         }
       }
 
-      const latestProg = type === 'tv' ? getLatestTVProgress(id) : getProgress(id, 'movie');
-      if (latestProg && latestProg.provider) {
-        modalProvider = latestProg.provider;
+      if (savedProgress && savedProgress.provider) {
+        modalProvider = savedProgress.provider;
       } else {
         modalProvider = settings.provider || 'vidking';
       }
