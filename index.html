@@ -3026,6 +3026,9 @@
           <button class="provider-tab" onclick="setProvider('111movies', this)">111Movies</button>
           <button class="provider-tab" onclick="setProvider('mappletv', this)">MappleTV</button>
           <button class="provider-tab" onclick="setProvider('vsembed', this)">VSEmbed</button>
+          <button class="provider-tab" onclick="setProvider('rivestream', this)">RiveStream</button>
+          <button class="provider-tab" onclick="setProvider('vidsrc', this)">VidSrc</button>
+          <button class="provider-tab" onclick="setProvider('videasy', this)">Videasy</button>
         </div>
 
         <!-- TV Controls -->
@@ -3088,6 +3091,9 @@
         <option value="111movies">111Movies</option>
         <option value="mappletv">MappleTV</option>
         <option value="vsembed">VSEmbed</option>
+        <option value="rivestream">RiveStream</option>
+        <option value="vidsrc">VidSrc</option>
+        <option value="videasy">Videasy</option>
       </select>
     </div>
     <div class="player-frame-wrap">
@@ -3123,8 +3129,11 @@
             <option value="vidnest">VidNest</option>
             <option value="111movies">111Movies</option>
             <option value="mappletv">MappleTV</option>
-            <option value="vidsrcme">VidSrc.me</option>
             <option value="vsembed">VSEmbed</option>
+            <option value="rivestream">RiveStream</option>
+            <option value="vidsrc">VidSrc</option>
+            <option value="videasy">Videasy</option>
+            <option value="vidsrcme">VidSrc.me</option>
           </select>
         </div>
         <div class="settings-field">
@@ -3795,6 +3804,15 @@
         case 'vsembed':
           if (type === 'movie') return usesImdbId(provider) && imdbId ? `https://vsembed.ru/embed/movie?imdb=${providerId}` : `https://vsembed.ru/embed/movie?tmdb=${providerId}`;
           return usesImdbId(provider) && imdbId ? `https://vsembed.ru/embed/tv?imdb=${providerId}&season=${season}&episode=${episode}` : `https://vsembed.ru/embed/tv?tmdb=${providerId}&season=${season}&episode=${episode}`;
+        case 'rivestream':
+          if (type === 'movie') return `https://rivestream.ru/embed?type=movie&id=${id}`;
+          return `https://rivestream.ru/embed?type=tv&id=${id}&season=${season}&episode=${episode}`;
+        case 'vidsrc':
+          if (type === 'movie') return `https://vidsrc.to/embed/movie/${id}`;
+          return `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`;
+        case 'videasy':
+          if (type === 'movie') return `https://player.videasy.net/movie/${id}`;
+          return `https://player.videasy.net/tv/${id}/${season}/${episode}`;
         default:
           return buildEmbedUrl('vidking', type, id, season, episode);
       }
