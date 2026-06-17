@@ -1985,6 +1985,195 @@
       border-color: var(--accent-2);
     }
 
+    /* ==================== CUSTOM SECTION PANEL ==================== */
+    #custom-section-panel {
+      display: none;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 160;
+      width: 380px;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border);
+      padding: 0;
+      box-shadow: -8px 0 40px rgba(0, 0, 0, 0.5);
+      animation: slideInRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow-y: auto;
+    }
+
+    #custom-section-panel.open {
+      display: block;
+    }
+
+    #custom-section-panel .settings-body {
+      display: grid;
+      gap: 18px;
+    }
+
+    .custom-section-field {
+      margin-bottom: 16px;
+    }
+
+    .custom-section-label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .media-type-toggle {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .media-type-btn {
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .media-type-btn.active {
+      background: var(--accent-grad);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .multi-select-list {
+      display: grid;
+      gap: 10px;
+      max-height: 240px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .multi-select-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .multi-select-option input {
+      accent-color: var(--accent-1);
+      min-width: auto;
+    }
+
+    .multi-select-option label {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    .custom-section-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .custom-section-actions button {
+      width: min(48%, 170px);
+    }
+
+    .custom-section-row .section-header {
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .section-filter-segment {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      background: var(--bg-elevated);
+    }
+
+    .section-filter-segment button {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .section-filter-segment button.active {
+      color: var(--text-primary);
+      background: rgba(124, 58, 237, 0.18);
+    }
+
+    .custom-section-row:not(:last-child) {
+      margin-bottom: 18px;
+    }
+
+    #custom-sections-container {
+      margin-bottom: 24px;
+    }
+
+    #custom-section-panel .custom-section-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .custom-section-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    .custom-section-list-item button {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .custom-section-empty {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    .custom-section-note {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    #custom-section-panel .settings-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     /* ==================== SETTINGS PANEL ==================== */
     #settings-panel {
       display: none;
@@ -2700,6 +2889,7 @@
         <button class="nav-tab" id="tab-favorite" onclick="showPage('favorite')">Favourite</button>
       </div>
       <div class="nav-actions">
+        <button class="nav-btn" onclick="toggleCustomSectionPanel()" title="Custom Section">＋</button>
         <button class="nav-btn" onclick="toggleSettings()" title="Settings">⚙️</button>
       </div>
     </div>
@@ -2742,6 +2932,8 @@
           <button class="carousel-nav right" id="cw-next" aria-label="Next">❯</button>
         </div>
       </div>
+
+      <div id="custom-sections-container"></div>
 
       <!-- Trending and Popular Movies + Anime Grid -->
       <div class="home-top-grid">
@@ -3535,6 +3727,50 @@
     </div>
   </div>
 
+  <div id="custom-section-panel">
+    <div class="settings-header">
+      <div class="settings-title">＋ Custom Section</div>
+      <button class="settings-close" onclick="toggleCustomSectionPanel()">✕</button>
+    </div>
+    <div class="settings-body">
+      <div class="settings-section">
+        <div class="settings-section-title">Create New Section</div>
+        <div class="custom-section-field">
+          <label class="custom-section-label" for="custom-section-title">Section Title</label>
+          <input type="text" class="settings-input" id="custom-section-title" placeholder="My sci-fi picks" />
+        </div>
+        <div class="custom-section-field">
+          <label class="custom-section-label">Media Type</label>
+          <div class="media-type-toggle">
+            <button type="button" class="media-type-btn active" data-media-type="movie" onclick="setCustomSectionMediaType('movie', this)">Movies</button>
+            <button type="button" class="media-type-btn" data-media-type="tv" onclick="setCustomSectionMediaType('tv', this)">TV Shows</button>
+          </div>
+        </div>
+        <div class="custom-section-field">
+          <label class="custom-section-label" for="custom-section-country">Country</label>
+          <select class="settings-select" id="custom-section-country"></select>
+        </div>
+        <div class="custom-section-field">
+          <label class="custom-section-label">Genre</label>
+          <div id="custom-section-genre-list" class="multi-select-list"></div>
+        </div>
+        <div class="custom-section-field">
+          <label class="custom-section-label">Provider</label>
+          <div id="custom-section-provider-list" class="multi-select-list"></div>
+        </div>
+        <div class="custom-section-actions">
+          <button class="btn-secondary" onclick="toggleCustomSectionPanel()">Cancel</button>
+          <button class="settings-save-btn" onclick="createCustomSection()">Create Section</button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Saved Sections</div>
+        <div id="custom-section-list" class="custom-section-list"></div>
+        <div id="custom-section-empty" class="custom-section-empty">No custom sections yet. Use the form above to add one.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===================== SETTINGS PANEL ===================== -->
   <div id="settings-panel">
     <div class="settings-header">
@@ -3647,6 +3883,15 @@
     };
     let filterCountries = [];
     let filterLanguages = [];
+    const CUSTOM_SECTION_STORAGE_KEY = 'cinestream_custom_sections';
+    const CUSTOM_SECTION_CACHE_KEY = 'cinestream_custom_section_cache';
+    const CUSTOM_SECTION_CACHE_TTL = 10 * 60 * 1000;
+    const CUSTOM_SECTION_MIN_ITEMS = 5;
+    const CUSTOM_SECTION_DATE_WINDOWS = ['week', 'month', 'season'];
+
+    let customSections = [];
+    let customSectionCache = {};
+    let customSectionObserver = null;
     let currentMovieGenre = null;
     let currentTVGenre = null;
     let moviePage = 1;
@@ -3695,6 +3940,343 @@
     }
 
     function getApiKey() { return settings.apiKey || DEFAULT_API_KEY; }
+
+    function getUserDefaultRegion() {
+      const locale = navigator.language || 'en-US';
+      const parts = locale.split(/[-_]/);
+      const region = (parts[1] || parts[0] || 'US').toUpperCase();
+      return region.length === 2 ? region : 'US';
+    }
+
+    function loadCustomSections() {
+      try { customSections = JSON.parse(localStorage.getItem(CUSTOM_SECTION_STORAGE_KEY) || '[]') || []; } catch (e) { customSections = []; }
+      try { customSectionCache = JSON.parse(sessionStorage.getItem(CUSTOM_SECTION_CACHE_KEY) || '{}') || {}; } catch (e) { customSectionCache = {}; }
+    }
+
+    function persistCustomSections() {
+      localStorage.setItem(CUSTOM_SECTION_STORAGE_KEY, JSON.stringify(customSections));
+    }
+
+    function persistCustomSectionCache() {
+      try { sessionStorage.setItem(CUSTOM_SECTION_CACHE_KEY, JSON.stringify(customSectionCache)); } catch (e) { }
+    }
+
+    function toggleCustomSectionPanel() {
+      const panel = document.getElementById('custom-section-panel');
+      if (!panel) return;
+      const isOpen = panel.classList.toggle('open');
+      if (isOpen) loadCustomSectionFormOptions();
+    }
+
+    function setCustomSectionMediaType(type, btn) {
+      const buttons = document.querySelectorAll('#custom-section-panel .media-type-btn');
+      buttons.forEach(b => b.classList.toggle('active', b.getAttribute('data-media-type') === type));
+    }
+
+    function getSelectedMultiValues(containerId) {
+      const values = [];
+      document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`).forEach(input => {
+        values.push(input.value);
+      });
+      return values;
+    }
+
+    function createCustomSection() {
+      const title = document.getElementById('custom-section-title')?.value.trim();
+      const mediaButton = document.querySelector('#custom-section-panel .media-type-btn.active');
+      const mediaType = mediaButton?.getAttribute('data-media-type') || 'movie';
+      const country = document.getElementById('custom-section-country')?.value || getUserDefaultRegion();
+      const genres = getSelectedMultiValues('custom-section-genre-list');
+      const providers = getSelectedMultiValues('custom-section-provider-list');
+
+      if (!title) {
+        showToast('Please enter a section title', 'error');
+        return;
+      }
+
+      const section = {
+        id: `custom-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        title,
+        mediaType,
+        country,
+        genres,
+        providers,
+        dateWindow: 'week'
+      };
+
+      customSections.unshift(section);
+      persistCustomSections();
+      renderCustomSections();
+      renderCustomSectionList();
+      toggleCustomSectionPanel();
+      showToast('Custom section created ✓', 'success');
+    }
+
+    function removeCustomSection(sectionId) {
+      customSections = customSections.filter(section => section.id !== sectionId);
+      persistCustomSections();
+      renderCustomSections();
+      renderCustomSectionList();
+    }
+
+    function loadCustomSectionFormOptions() {
+      const countrySelect = document.getElementById('custom-section-country');
+      if (countrySelect && filterCountries.length) {
+        const region = getUserDefaultRegion();
+        countrySelect.innerHTML = filterCountries
+          .map(country => `<option value="${escHtml(country.iso_3166_1)}"${country.iso_3166_1 === region ? ' selected' : ''}>${escHtml(country.english_name)} (${escHtml(country.iso_3166_1)})</option>`)
+          .join('');
+      }
+
+      const genreContainer = document.getElementById('custom-section-genre-list');
+      if (genreContainer) {
+        const genres = [...new Map([...movieGenres, ...tvGenres].map(genre => [genre.id, genre])).values()];
+        genreContainer.innerHTML = genres.map(genre => `
+          <label class="multi-select-option">
+            <input type="checkbox" value="${escHtml(String(genre.id))}" />
+            <span>${escHtml(genre.name)}</span>
+          </label>
+        `).join('');
+      }
+
+      const providerContainer = document.getElementById('custom-section-provider-list');
+      if (providerContainer) {
+        const providers = [...new Map([...movieWatchProviders, ...tvWatchProviders].map(provider => [provider.provider_id, provider])).values()];
+        providerContainer.innerHTML = providers.map(provider => `
+          <label class="multi-select-option">
+            <input type="checkbox" value="${escHtml(String(provider.provider_id))}" />
+            <span>${escHtml(provider.provider_name)}</span>
+          </label>
+        `).join('');
+      }
+
+      const activeMedia = document.querySelector('#custom-section-panel .media-type-btn.active');
+      if (!activeMedia) setCustomSectionMediaType('movie');
+    }
+
+    function renderCustomSectionList() {
+      const list = document.getElementById('custom-section-list');
+      const empty = document.getElementById('custom-section-empty');
+      if (!list || !empty) return;
+      list.innerHTML = '';
+      if (!customSections.length) {
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+      customSections.forEach(section => {
+        const item = document.createElement('div');
+        item.className = 'custom-section-list-item';
+        item.innerHTML = `
+          <div>
+            <strong>${escHtml(section.title)}</strong><br>
+            <span style="color:var(--text-muted); font-size:0.82rem;">${section.mediaType === 'movie' ? 'Movies' : 'TV Shows'} • ${escHtml(section.country)}</span>
+          </div>
+          <button type="button" onclick="removeCustomSection('${section.id}')">Remove</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function updateCustomSectionWindow(sectionId, windowKey) {
+      const section = customSections.find(item => item.id === sectionId);
+      if (!section) return;
+      section.dateWindow = windowKey;
+      persistCustomSections();
+      renderCustomSections();
+      const rowEl = document.getElementById(`custom-section-${sectionId}`);
+      if (rowEl) rowEl.dataset.loaded = 'false';
+      loadCustomSectionRow(sectionId);
+    }
+
+    function renderCustomSections() {
+      const container = document.getElementById('custom-sections-container');
+      if (!container) return;
+      container.innerHTML = '';
+      if (!customSections.length) return;
+
+      customSections.forEach(section => {
+        const sectionEl = document.createElement('div');
+        sectionEl.className = 'section custom-section-row';
+        sectionEl.id = `custom-section-${section.id}`;
+        sectionEl.dataset.sectionId = section.id;
+        sectionEl.dataset.loaded = 'false';
+        sectionEl.innerHTML = `
+          <div class="section-header">
+            <div class="section-title">
+              <div class="section-accent"></div>${escHtml(section.title)}
+            </div>
+            <div class="section-filter-segment" role="tablist">
+              <button type="button" class="${section.dateWindow === 'week' ? 'active' : ''}" onclick="updateCustomSectionWindow('${section.id}', 'week')">This Week</button>
+              <button type="button" class="${section.dateWindow === 'month' ? 'active' : ''}" onclick="updateCustomSectionWindow('${section.id}', 'month')">This Month</button>
+              <button type="button" class="${section.dateWindow === 'season' ? 'active' : ''}" onclick="updateCustomSectionWindow('${section.id}', 'season')">This Season</button>
+            </div>
+            <button class="section-more" onclick="applyCustomSectionToPage('${section.id}')">See all →</button>
+          </div>
+          <div class="carousel-wrap">
+            <button class="carousel-nav left" onclick="rowPrev('row-custom-${section.id}')" aria-label="Previous">❮</button>
+            <div class="carousel-track" id="row-custom-${section.id}" data-row-id="${section.id}">
+              <div class="skeleton-card skeleton"><div class="skeleton-poster skeleton"></div></div>
+              <div class="skeleton-card skeleton"><div class="skeleton-poster skeleton"></div></div>
+              <div class="skeleton-card skeleton"><div class="skeleton-poster skeleton"></div></div>
+              <div class="skeleton-card skeleton"><div class="skeleton-poster skeleton"></div></div>
+            </div>
+            <button class="carousel-nav right" onclick="rowNext('row-custom-${section.id}')" aria-label="Next">❯</button>
+          </div>
+        `;
+        container.appendChild(sectionEl);
+      });
+
+      initCustomSectionObserver();
+    }
+
+    function initCustomSectionObserver() {
+      if (customSectionObserver) customSectionObserver.disconnect();
+      customSectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const sectionId = entry.target.dataset.sectionId;
+          if (!sectionId || entry.target.dataset.loaded === 'true') return;
+          loadCustomSectionRow(sectionId);
+        });
+      }, { rootMargin: '0px 0px 200px 0px', threshold: 0.2 });
+      document.querySelectorAll('.custom-section-row').forEach(row => customSectionObserver.observe(row));
+    }
+
+    function getCustomSectionCacheKey(path, params) {
+      const sorted = Object.keys(params).sort().reduce((acc, key) => { acc[key] = params[key]; return acc; }, {});
+      return JSON.stringify({ path, params: sorted });
+    }
+
+    function getCachedCustomSectionResponse(key) {
+      const entry = customSectionCache[key];
+      if (!entry) return null;
+      if (Date.now() - entry.ts > CUSTOM_SECTION_CACHE_TTL) {
+        delete customSectionCache[key];
+        persistCustomSectionCache();
+        return null;
+      }
+      return entry.data;
+    }
+
+    function cacheCustomSectionResponse(key, data) {
+      customSectionCache[key] = { ts: Date.now(), data };
+      persistCustomSectionCache();
+    }
+
+    function getNextCustomSectionWindow(windowKey) {
+      const index = CUSTOM_SECTION_DATE_WINDOWS.indexOf(windowKey);
+      if (index < 0 || index === CUSTOM_SECTION_DATE_WINDOWS.length - 1) return null;
+      return CUSTOM_SECTION_DATE_WINDOWS[index + 1];
+    }
+
+    function getCustomSectionDateRange(windowKey) {
+      const end = new Date();
+      const start = new Date();
+      if (windowKey === 'week') {
+        start.setDate(end.getDate() - 6);
+      } else if (windowKey === 'month') {
+        start.setMonth(end.getMonth() - 1);
+      } else {
+        start.setMonth(end.getMonth() - 3);
+      }
+      const pad = value => String(value).padStart(2, '0');
+      const format = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+      return [format(start), format(end)];
+    }
+
+    function buildCustomSectionParams(section, windowKey) {
+      const params = { page: 1, sort_by: 'popularity.desc' };
+      if (section.country) {
+        params.with_origin_country = section.country;
+      }
+      if (section.genres && section.genres.length) {
+        params.with_genres = section.genres.join('|');
+      }
+      if (section.providers && section.providers.length) {
+        params.with_watch_providers = section.providers.join('|');
+        params.watch_region = section.country || getUserDefaultRegion();
+      }
+      const dateKey = section.mediaType === 'tv' ? 'first_air_date' : 'primary_release_date';
+      const [start, end] = getCustomSectionDateRange(windowKey);
+      params[`${dateKey}.gte`] = start;
+      params[`${dateKey}.lte`] = end;
+      return params;
+    }
+
+    async function fetchCustomSectionResults(section, windowKey) {
+      const params = buildCustomSectionParams(section, windowKey);
+      const path = section.mediaType === 'tv' ? '/discover/tv' : '/discover/movie';
+      const cacheKey = getCustomSectionCacheKey(path, params);
+      let data = getCachedCustomSectionResponse(cacheKey);
+      if (!data) {
+        data = await tmdb(path, params);
+        cacheCustomSectionResponse(cacheKey, data);
+      }
+      const results = (data.results || []).map(item => ({ ...item, media_type: section.mediaType }));
+      if (results.length < CUSTOM_SECTION_MIN_ITEMS) {
+        const nextWindow = getNextCustomSectionWindow(windowKey);
+        if (nextWindow) return fetchCustomSectionResults(section, nextWindow);
+      }
+      return { results, usedWindow: windowKey };
+    }
+
+    async function loadCustomSectionRow(sectionId) {
+      const section = customSections.find(item => item.id === sectionId);
+      if (!section) return;
+      const rowEl = document.getElementById(`custom-section-${sectionId}`);
+      const trackId = `row-custom-${sectionId}`;
+      const track = document.getElementById(trackId);
+      if (!rowEl || !track) return;
+      if (rowEl.dataset.loaded === 'true') return;
+      try {
+        const response = await fetchCustomSectionResults(section, section.dateWindow || 'week');
+        const items = response.results || [];
+        if (!items.length) {
+          track.innerHTML = '<div style="padding:20px; color:var(--text-muted)">No titles found for this section.</div>';
+        } else {
+          renderCards(trackId, items);
+        }
+        rowEl.dataset.loaded = 'true';
+      } catch (e) {
+        console.error('Failed to load custom section row:', e);
+        track.innerHTML = '<div style="padding:20px; color:var(--text-muted)">Unable to load section content.</div>';
+      }
+    }
+
+    function applyCustomSectionToPage(sectionId) {
+      const section = customSections.find(item => item.id === sectionId);
+      if (!section) return;
+      const pageType = section.mediaType === 'tv' ? 'tvshows' : 'movies';
+      showPage(pageType);
+      const mappings = {
+        movies: {
+          country: 'movie-country-filter',
+          genre: 'movie-genre-filter',
+          provider: 'movie-provider-filter'
+        },
+        tvshows: {
+          country: 'tv-country-filter',
+          genre: 'tv-genre-filter',
+          provider: 'tv-provider-filter'
+        }
+      };
+      const ids = mappings[pageType];
+      if (!ids) return;
+      const countryEl = document.getElementById(ids.country);
+      const genreEl = document.getElementById(ids.genre);
+      const providerEl = document.getElementById(ids.provider);
+      if (countryEl) countryEl.value = section.country || '';
+      if (genreEl) genreEl.value = section.genres && section.genres.length ? section.genres[0] : '';
+      if (providerEl) providerEl.value = section.providers && section.providers.length ? section.providers[0] : '';
+      [countryEl, genreEl, providerEl].forEach(el => {
+        if (!el) return;
+        const field = el.closest('.filter-field');
+        if (field) updateFilterSummary(field);
+      });
+      renderActiveFilters(pageType);
+      refreshGrid(pageType);
+    }
 
     // ==================== WATCHLIST & FAVORITES (TMDB SYNCED) ====================
     let tmdbWatchlist = [];
@@ -4618,6 +5200,10 @@
         tvWatchProviders = tvProviderData.results || [];
         filterCountries = countryData || [];
         filterLanguages = languageData || [];
+
+        loadCustomSections();
+        renderCustomSectionList();
+        renderCustomSections();
 
         // Load all rows in parallel
         await Promise.all([
