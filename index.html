@@ -705,27 +705,309 @@
       max-width: 1400px;
       margin: 0 auto;
       padding: 0 24px 20px;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(150px, 1fr));
-      grid-auto-rows: minmax(100px, auto);
+      display: none;
+      display: flex;
+      flex-wrap: wrap;
       gap: 10px;
-      align-items: start;
+      align-items: flex-start;
+      overflow: visible;
+      transition: all var(--transition);
+    }
+
+    .advanced-filters.open {
+      display: flex;
+    }
+
+    .filter-field {
+      flex: 0 0 auto;
+      min-width: 140px;
+      max-width: 180px;
     }
 
     .year-range-picker {
-      grid-column: span 1;
-      grid-row: span 2;
+      min-width: 200px;
+      max-width: 220px;
     }
 
     @media (max-width: 1000px) {
       .advanced-filters {
-        grid-template-columns: repeat(2, minmax(140px, 1fr));
+        padding: 0 12px 20px;
+        justify-content: center;
+      }
+
+      .filter-field {
+        min-width: 130px;
+        max-width: 160px;
       }
 
       .year-range-picker {
-        grid-column: span 2;
-        grid-row: auto;
+        min-width: 180px;
+        max-width: 200px;
       }
+    }
+
+    /* ==================== ACTIVE FILTERS & TOGGLE ==================== */
+    .filter-header-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: nowrap;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .active-filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: nowrap;
+      align-items: center;
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: calc(100% - 60px);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .active-filters::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 14px;
+      background: rgba(124, 58, 237, 0.12);
+      border: 1px solid rgba(124, 58, 237, 0.35);
+      color: var(--accent-1);
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .active-filters::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 14px;
+      background: rgba(124, 58, 237, 0.12);
+      border: 1px solid rgba(124, 58, 237, 0.35);
+      color: var(--accent-1);
+      font-size: 0.75rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .filter-pill-remove {
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity var(--transition);
+      font-size: 0.85rem;
+    }
+
+    .filter-pill-remove:hover {
+      opacity: 1;
+    }
+
+    .filter-toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 700;
+      transition: all var(--transition);
+      flex-shrink: 0;
+    }
+
+    .filter-toggle-btn:hover {
+      border-color: var(--accent-1);
+      color: var(--accent-1);
+      background: rgba(124, 58, 237, 0.1);
+    }
+
+    .filter-toggle-btn.active {
+      border-color: var(--accent-1);
+      background: var(--accent-grad);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(124, 58, 237, 0.4);
+    }
+
+    /* Filter Logic Operator Toggle */
+    .filter-logic-operator {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+      padding: 8px;
+      background: var(--bg-elevated);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .filter-logic-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+
+    .filter-logic-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .filter-logic-btn.active {
+      background: var(--accent-grad);
+      color: #fff;
+    }
+
+    .filter-clear-all {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      padding: 8px 12px;
+      margin-top: 0;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: all var(--transition);
+      white-space: nowrap;
+      min-width: 120px;
+    }
+
+    .filter-clear-all:hover {
+      border-color: var(--accent-2);
+      color: var(--accent-2);
+      background: rgba(219, 39, 119, 0.1);
+    }
+
+    .filter-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .filter-summary:hover {
+      border-color: rgba(124, 58, 237, 0.35);
+      background: rgba(20, 20, 33, 0.95);
+    }
+
+    .filter-summary-title {
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 0.92rem;
+    }
+
+    .filter-summary-value {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px;
+      text-align: right;
+    }
+
+    .filter-detail {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 10px);
+      z-index: 10;
+      padding: 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    }
+
+    .filter-field:hover .filter-detail,
+    .filter-field:focus-within .filter-detail {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .filter-field {
+      position: relative;
+    }
+
+    .filter-group-logic {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .filter-group-logic button {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+
+    .filter-group-logic button.active {
+      background: var(--accent-grad);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .filter-detail-content {
+      display: grid;
+      gap: 14px;
+    }
+
+    .filter-detail .filter-field {
+      margin: 0;
     }
 
     @media (max-width: 720px) {
@@ -735,6 +1017,20 @@
 
       .year-range-picker {
         grid-column: span 1;
+      }
+
+      .filter-header-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .active-filters {
+        width: 100%;
+        min-width: auto;
+      }
+
+      .filter-toggle-btn {
+        align-self: flex-end;
       }
     }
 
@@ -786,12 +1082,55 @@
     .range-inputs {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
+      position: relative;
+      min-height: 54px;
+      align-items: center;
     }
 
     .filter-range {
+      position: relative;
       width: 100%;
-      accent-color: var(--accent-1);
+      height: 36px;
+      background: transparent;
+      -webkit-appearance: none;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .filter-range::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .filter-range::-moz-range-track {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .filter-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent-1);
+      border: 2px solid rgba(0, 0, 0, 0.35);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      margin-top: -4px;
+    }
+
+    .filter-range::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent-1);
+      border: 2px solid rgba(0, 0, 0, 0.35);
+      cursor: pointer;
     }
 
     .year-range-picker .filter-range {
@@ -830,16 +1169,11 @@
       border-color: var(--accent-1);
     }
 
-    .range-inputs {
-      position: relative;
-      min-height: 54px;
-    }
-
     .range-track-highlight {
       position: absolute;
       left: var(--range-min-percent, 0%);
       right: calc(100% - var(--range-max-percent, 100%));
-      top: 22px;
+      top: 24px;
       height: 6px;
       border-radius: 999px;
       background: linear-gradient(90deg, rgba(124, 58, 237, 0.95), rgba(219, 39, 119, 0.95));
@@ -860,60 +1194,8 @@
       z-index: 1;
     }
 
-    .range-tooltip-min {
-      left: var(--range-min-percent, 0%);
-    }
-
-    .range-tooltip-max {
-      left: var(--range-max-percent, 100%);
-    }
-
-    .filter-range {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 54px;
-      background: transparent;
-      -webkit-appearance: none;
-      appearance: none;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .filter-range::-webkit-slider-runnable-track {
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .filter-range::-moz-range-track {
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .filter-range::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--accent-1);
-      border: 3px solid rgba(0, 0, 0, 0.35);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-      margin-top: -6px;
-    }
-
-    .filter-range::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--accent-1);
-      border: 3px solid rgba(0, 0, 0, 0.35);
-      cursor: pointer;
-    }
+    .range-tooltip-min { left: var(--range-min-percent, 0%); }
+    .range-tooltip-max { left: var(--range-max-percent, 100%); }
 
     .year-range-picker .year-picker-control {
       position: relative;
@@ -2692,114 +2974,190 @@
     <div id="page-movies" class="page">
       <div style="padding: 20px 0">
         <div class="section-header">
-          <div class="section-title">
-            <div class="section-accent"></div>Movies
+          <div class="filter-header-wrapper">
+            <div class="section-title">
+              <div class="section-accent"></div>Movies
+            </div>
+            <div class="active-filters" data-filter-container="movies"></div>
+            <button class="filter-toggle-btn" data-filter-toggle="movies" title="Toggle filters">+</button>
           </div>
         </div>
-        <div class="advanced-filters" id="movie-advanced-filters">
+        <div class="advanced-filters" id="movie-advanced-filters" data-filter-panel="movies">
+          <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 12px;">
+            <div></div>
+            <button class="filter-clear-all" data-filter-clear="movies">Clear all filters</button>
+          </div>
           <div class="filter-field range-filter year-range-picker" data-range-filter data-range-kind="year"
             data-min-id="movie-release-year-min" data-max-id="movie-release-year-max">
-            <div class="range-filter-head">
-              <div>
-                <label for="movie-release-year-min">Release year</label>
-                <span class="range-filter-value" data-range-label>Any years</span>
-              </div>
-              <div class="range-filter-actions">
-                <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
-              </div>
+            <div class="filter-summary">
+              <span class="filter-summary-title">Release</span>
+              <span class="filter-summary-value" data-summary-value>Any years</span>
             </div>
-            <div class="year-picker-control">
-              <button type="button" class="year-picker-toggle" aria-haspopup="true" aria-expanded="false">
-                <span class="year-picker-label">Select years</span>
-                <span class="year-picker-caret">▾</span>
-              </button>
-              <div class="year-picker-menu" data-year-picker-menu hidden>
-                <div class="year-picker-menu-header">
-                  <div class="year-picker-values">
-                    <button type="button" class="year-picker-selected active" data-year-target="min">
-                      <span>From</span>
-                      <strong class="year-picker-selected-value"></strong>
-                    </button>
-                    <button type="button" class="year-picker-selected" data-year-target="max">
-                      <span>To</span>
-                      <strong class="year-picker-selected-value"></strong>
-                    </button>
+            <div class="filter-detail">
+              <div class="filter-group-logic" data-group-logic="movie-release-year">
+                <button type="button" class="active" data-logic="AND">AND</button>
+                <button type="button" data-logic="OR">OR</button>
+              </div>
+              <div class="filter-detail-content">
+                <div class="range-filter-head">
+                  <div>
+                    <label for="movie-release-year-min">Release</label>
+                    <span class="range-filter-value" data-range-label>Any years</span>
                   </div>
-                  <button type="button" class="year-picker-menu-close" aria-label="Close">×</button>
+                  <div class="range-filter-actions">
+                    <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+                  </div>
                 </div>
-                <div class="year-picker-grid" role="grid" aria-label="Year selection"></div>
-                <div class="year-picker-actions">
-                  <button type="button" class="btn-secondary year-picker-reset" data-range-reset>Reset</button>
+                <div class="year-picker-control">
+                  <button type="button" class="year-picker-toggle" aria-haspopup="true" aria-expanded="false">
+                    <span class="year-picker-label">Select years</span>
+                    <span class="year-picker-caret">▾</span>
+                  </button>
+                  <div class="year-picker-menu" data-year-picker-menu hidden>
+                    <div class="year-picker-menu-header">
+                      <div class="year-picker-values">
+                        <button type="button" class="year-picker-selected active" data-year-target="min">
+                          <span>From</span>
+                          <strong class="year-picker-selected-value"></strong>
+                        </button>
+                        <button type="button" class="year-picker-selected" data-year-target="max">
+                          <span>To</span>
+                          <strong class="year-picker-selected-value"></strong>
+                        </button>
+                      </div>
+                      <button type="button" class="year-picker-menu-close" aria-label="Close">×</button>
+                    </div>
+                    <div class="year-picker-grid" role="grid" aria-label="Year selection"></div>
+                    <div class="year-picker-actions">
+                      <button type="button" class="btn-secondary year-picker-reset" data-range-reset>Reset</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="range-inputs">
+                  <div class="range-track-highlight"></div>
+                  <div class="range-tooltip range-tooltip-min"></div>
+                  <div class="range-tooltip range-tooltip-max"></div>
+                  <input class="filter-range" id="movie-release-year-min" type="range" min="1900" max="2030" step="1"
+                    value="1900" data-default-value="1900" aria-label="Minimum movie release year">
+                  <input class="filter-range" id="movie-release-year-max" type="range" min="1900" max="2030" step="1"
+                    value="2030" data-default-value="2030" aria-label="Maximum movie release year">
                 </div>
               </div>
-            </div>
-            <div class="range-inputs">
-              <div class="range-track-highlight"></div>
-              <div class="range-tooltip range-tooltip-min"></div>
-              <div class="range-tooltip range-tooltip-max"></div>
-              <input class="filter-range" id="movie-release-year-min" type="range" min="1900" max="2030" step="1"
-                value="1900" data-default-value="1900" aria-label="Minimum movie release year">
-              <input class="filter-range" id="movie-release-year-max" type="range" min="1900" max="2030" step="1"
-                value="2030" data-default-value="2030" aria-label="Maximum movie release year">
             </div>
           </div>
           <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax"
             data-min-id="movie-rating-min" data-max-id="movie-rating-max">
-            <div class="range-filter-head">
-              <div>
-                <label for="movie-rating-min">Rating</label>
-                <span class="range-filter-value" data-range-label>Any</span>
-              </div>
-              <div class="range-filter-actions">
-                <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
-              </div>
+            <div class="filter-summary">
+              <span class="filter-summary-title">Rating</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
             </div>
-            <div class="range-inputs">
-              <div class="range-track-highlight"></div>
-              <div class="range-tooltip range-tooltip-min"></div>
-              <div class="range-tooltip range-tooltip-max"></div>
-              <input class="filter-range" id="movie-rating-min" type="range" min="0" max="10" step="0.1" value="0"
-                data-default-value="0" aria-label="Minimum movie rating">
-              <input class="filter-range" id="movie-rating-max" type="range" min="0" max="10" step="0.1" value="10"
-                data-default-value="10" aria-label="Maximum movie rating">
+            <div class="filter-detail">
+              <div class="filter-group-logic" data-group-logic="movie-rating">
+                <button type="button" class="active" data-logic="AND">AND</button>
+                <button type="button" data-logic="OR">OR</button>
+              </div>
+              <div class="filter-detail-content">
+                <div class="range-filter-head">
+                  <div>
+                    <label for="movie-rating-min">Rating</label>
+                    <span class="range-filter-value" data-range-label>Any</span>
+                  </div>
+                  <div class="range-filter-actions">
+                    <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+                  </div>
+                </div>
+                <div class="range-inputs">
+                  <div class="range-track-highlight"></div>
+                  <div class="range-tooltip range-tooltip-min"></div>
+                  <div class="range-tooltip range-tooltip-max"></div>
+                  <input class="filter-range" id="movie-rating-min" type="range" min="0" max="10" step="0.1" value="0"
+                    data-default-value="0" aria-label="Minimum movie rating">
+                  <input class="filter-range" id="movie-rating-max" type="range" min="0" max="10" step="0.1" value="10"
+                    data-default-value="10" aria-label="Maximum movie rating">
+                </div>
+              </div>
             </div>
           </div>
           <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax"
             data-min-id="movie-vote-min" data-max-id="movie-vote-max">
-            <div class="range-filter-head">
-              <div>
-                <label for="movie-vote-min">Vote count</label>
-                <span class="range-filter-value" data-range-label>Any</span>
+            <div class="filter-summary">
+              <span class="filter-summary-title">Vote count</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
+            </div>
+            <div class="filter-detail">
+              <div class="filter-group-logic" data-group-logic="movie-vote-count">
+                <button type="button" class="active" data-logic="AND">AND</button>
+                <button type="button" data-logic="OR">OR</button>
               </div>
-              <div class="range-filter-actions">
-                <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+              <div class="filter-detail-content">
+                <div class="range-filter-head">
+                  <div>
+                    <label for="movie-vote-min">Vote count</label>
+                    <span class="range-filter-value" data-range-label>Any</span>
+                  </div>
+                  <div class="range-filter-actions">
+                    <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+                  </div>
+                </div>
+                <div class="range-inputs">
+                  <div class="range-track-highlight"></div>
+                  <div class="range-tooltip range-tooltip-min"></div>
+                  <div class="range-tooltip range-tooltip-max"></div>
+                  <input class="filter-range" id="movie-vote-min" type="range" min="0" max="10000" step="50" value="0"
+                    data-default-value="0" aria-label="Minimum movie vote count">
+                  <input class="filter-range" id="movie-vote-max" type="range" min="0" max="10000" step="50" value="10000"
+                    data-default-value="10000" aria-label="Maximum movie vote count">
+                </div>
               </div>
             </div>
-            <div class="range-inputs">
-              <div class="range-track-highlight"></div>
-              <div class="range-tooltip range-tooltip-min"></div>
-              <div class="range-tooltip range-tooltip-max"></div>
-              <input class="filter-range" id="movie-vote-min" type="range" min="0" max="10000" step="50" value="0"
-                data-default-value="0" aria-label="Minimum movie vote count">
-              <input class="filter-range" id="movie-vote-max" type="range" min="0" max="10000" step="50" value="10000"
-                data-default-value="10000" aria-label="Maximum movie vote count">
+          </div>
+          <div class="filter-field">
+            <div class="filter-summary">
+              <span class="filter-summary-title">Language</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
+            </div>
+            <div class="filter-detail">
+              <div class="filter-detail-content">
+                <label for="movie-language-filter">Language</label>
+                <select class="filter-select" id="movie-language-filter"></select>
+              </div>
             </div>
           </div>
           <div class="filter-field">
-            <label for="movie-language-filter">Original language</label>
-            <select class="filter-select" id="movie-language-filter"></select>
+            <div class="filter-summary">
+              <span class="filter-summary-title">Country</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
+            </div>
+            <div class="filter-detail">
+              <div class="filter-detail-content">
+                <label for="movie-country-filter">Country</label>
+                <select class="filter-select" id="movie-country-filter"></select>
+              </div>
+            </div>
           </div>
           <div class="filter-field">
-            <label for="movie-country-filter">Country</label>
-            <select class="filter-select" id="movie-country-filter"></select>
+            <div class="filter-summary">
+              <span class="filter-summary-title">Provider</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
+            </div>
+            <div class="filter-detail">
+              <div class="filter-detail-content">
+                <label for="movie-provider-filter">Provider</label>
+                <select class="filter-select" id="movie-provider-filter"></select>
+              </div>
+            </div>
           </div>
           <div class="filter-field">
-            <label for="movie-provider-filter">Provider</label>
-            <select class="filter-select" id="movie-provider-filter"></select>
-          </div>
-          <div class="filter-field">
-            <label for="movie-genre-filter">Genre</label>
-            <select class="filter-select" id="movie-genre-filter"></select>
+            <div class="filter-summary">
+              <span class="filter-summary-title">Genre</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
+            </div>
+            <div class="filter-detail">
+              <div class="filter-detail-content">
+                <label for="movie-genre-filter">Genre</label>
+                <select class="filter-select" id="movie-genre-filter"></select>
+              </div>
+            </div>
           </div>
         </div>
         <div class="media-grid" id="movies-grid"></div>
@@ -2811,105 +3169,177 @@
     <div id="page-tvshows" class="page">
       <div style="padding: 20px 0">
         <div class="section-header">
-          <div class="section-title">
-            <div class="section-accent"></div>TV Shows
+          <div class="filter-header-wrapper">
+            <div class="section-title">
+              <div class="section-accent"></div>TV Shows
+            </div>
+            <div class="active-filters" data-filter-container="tvshows"></div>
+            <button class="filter-toggle-btn" data-filter-toggle="tvshows" title="Toggle filters">+</button>
           </div>
         </div>
-        <div class="advanced-filters" id="tv-advanced-filters">
+        <div class="advanced-filters" id="tv-advanced-filters" data-filter-panel="tvshows">
+          <div style="grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 12px;">
+            <div></div>
+            <button class="filter-clear-all" data-filter-clear="tvshows">Clear all filters</button>
+          </div>
           <div class="filter-field range-filter year-range-picker" data-range-filter data-range-kind="year"
             data-min-id="tv-first-air-year-min" data-max-id="tv-first-air-year-max">
-            <div class="range-filter-head">
-              <div>
-                <label for="tv-first-air-year-min">First air year</label>
-                <span class="range-filter-value" data-range-label>Any years</span>
-              </div>
-              <div class="range-filter-actions">
-                <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
-              </div>
+            <div class="filter-summary">
+              <span class="filter-summary-title">First air</span>
+              <span class="filter-summary-value" data-summary-value>Any years</span>
             </div>
-            <div class="year-picker-control">
-              <button type="button" class="year-picker-toggle" aria-haspopup="true" aria-expanded="false">
-                <span class="year-picker-label">Select years</span>
-                <span class="year-picker-caret">▾</span>
-              </button>
-              <div class="year-picker-menu" data-year-picker-menu hidden>
-                <div class="year-picker-menu-header">
-                  <div class="year-picker-values">
-                    <button type="button" class="year-picker-selected active" data-year-target="min">
-                      <span>From</span>
-                      <strong class="year-picker-selected-value"></strong>
-                    </button>
-                    <button type="button" class="year-picker-selected" data-year-target="max">
-                      <span>To</span>
-                      <strong class="year-picker-selected-value"></strong>
-                    </button>
+            <div class="filter-detail">
+              <div class="filter-group-logic" data-group-logic="tv-first-air-year">
+                <button type="button" class="active" data-logic="AND">AND</button>
+                <button type="button" data-logic="OR">OR</button>
+              </div>
+              <div class="filter-detail-content">
+                <div class="range-filter-head">
+                  <div>
+                    <label for="tv-first-air-year-min">First air</label>
+                    <span class="range-filter-value" data-range-label>Any years</span>
                   </div>
-                  <button type="button" class="year-picker-menu-close" aria-label="Close">×</button>
+                  <div class="range-filter-actions">
+                    <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+                  </div>
                 </div>
-                <div class="year-picker-grid" role="grid" aria-label="Year selection"></div>
-                <div class="year-picker-actions">
-                  <button type="button" class="btn-secondary year-picker-reset" data-range-reset>Reset</button>
+                <div class="year-picker-control">
+                  <button type="button" class="year-picker-toggle" aria-haspopup="true" aria-expanded="false">
+                    <span class="year-picker-label">Select years</span>
+                    <span class="year-picker-caret">▾</span>
+                  </button>
+                  <div class="year-picker-menu" data-year-picker-menu hidden>
+                    <div class="year-picker-menu-header">
+                      <div class="year-picker-values">
+                        <button type="button" class="year-picker-selected active" data-year-target="min">
+                          <span>From</span>
+                          <strong class="year-picker-selected-value"></strong>
+                        </button>
+                        <button type="button" class="year-picker-selected" data-year-target="max">
+                          <span>To</span>
+                          <strong class="year-picker-selected-value"></strong>
+                        </button>
+                      </div>
+                      <button type="button" class="year-picker-menu-close" aria-label="Close">×</button>
+                    </div>
+                    <div class="year-picker-grid" role="grid" aria-label="Year selection"></div>
+                    <div class="year-picker-actions">
+                      <button type="button" class="btn-secondary year-picker-reset" data-range-reset>Reset</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="range-inputs">
+                  <div class="range-track-highlight"></div>
+                  <div class="range-tooltip range-tooltip-min"></div>
+                  <div class="range-tooltip range-tooltip-max"></div>
+                  <input class="filter-range" id="tv-first-air-year-min" type="range" min="1900" max="2030" step="1"
+                    value="1900" data-default-value="1900" aria-label="Minimum first air year">
+                  <input class="filter-range" id="tv-first-air-year-max" type="range" min="1900" max="2030" step="1"
+                    value="2030" data-default-value="2030" aria-label="Maximum first air year">
                 </div>
               </div>
-            </div>
-            <div class="range-inputs">
-              <div class="range-track-highlight"></div>
-              <div class="range-tooltip range-tooltip-min"></div>
-              <div class="range-tooltip range-tooltip-max"></div>
-              <input class="filter-range" id="tv-first-air-year-min" type="range" min="1900" max="2030" step="1"
-                value="1900" data-default-value="1900" aria-label="Minimum first air year">
-              <input class="filter-range" id="tv-first-air-year-max" type="range" min="1900" max="2030" step="1"
-                value="2030" data-default-value="2030" aria-label="Maximum first air year">
             </div>
           </div>
           <div class="filter-field range-filter minmax-picker" data-range-filter data-range-kind="minmax"
             data-min-id="tv-vote-min" data-max-id="tv-vote-max">
-            <div class="range-filter-head">
-              <div>
-                <label for="tv-vote-min">Vote count</label>
-                <span class="range-filter-value" data-range-label>Any</span>
+            <div class="filter-summary">
+              <span class="filter-summary-title">Vote count</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
+            </div>
+            <div class="filter-detail">
+              <div class="filter-group-logic" data-group-logic="tv-vote-count">
+                <button type="button" class="active" data-logic="AND">AND</button>
+                <button type="button" data-logic="OR">OR</button>
               </div>
-              <div class="range-filter-actions">
-                <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+              <div class="filter-detail-content">
+                <div class="range-filter-head">
+                  <div>
+                    <label for="tv-vote-min">Vote count</label>
+                    <span class="range-filter-value" data-range-label>Any</span>
+                  </div>
+                  <div class="range-filter-actions">
+                    <button type="button" class="range-reset-btn" data-range-reset>Reset</button>
+                  </div>
+                </div>
+                <div class="range-inputs">
+                  <div class="range-track-highlight"></div>
+                  <div class="range-tooltip range-tooltip-min"></div>
+                  <div class="range-tooltip range-tooltip-max"></div>
+                  <input class="filter-range" id="tv-vote-min" type="range" min="0" max="10000" step="50" value="0"
+                    data-default-value="0" aria-label="Minimum TV vote count">
+                  <input class="filter-range" id="tv-vote-max" type="range" min="0" max="10000" step="50" value="10000"
+                    data-default-value="10000" aria-label="Maximum TV vote count">
+                </div>
               </div>
             </div>
-            <div class="range-inputs">
-              <div class="range-track-highlight"></div>
-              <div class="range-tooltip range-tooltip-min"></div>
-              <div class="range-tooltip range-tooltip-max"></div>
-              <input class="filter-range" id="tv-vote-min" type="range" min="0" max="10000" step="50" value="0"
-                data-default-value="0" aria-label="Minimum TV vote count">
-              <input class="filter-range" id="tv-vote-max" type="range" min="0" max="10000" step="50" value="10000"
-                data-default-value="10000" aria-label="Maximum TV vote count">
+          </div>
+          <div class="filter-field">
+            <div class="filter-summary">
+              <span class="filter-summary-title">Status</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
+            </div>
+            <div class="filter-detail">
+              <div class="filter-detail-content">
+                <label for="tv-status-filter">Status</label>
+                <select class="filter-select" id="tv-status-filter">
+                  <option value="">Any</option>
+                  <option value="0">Returning Series</option>
+                  <option value="1">Planned</option>
+                  <option value="2">In Production</option>
+                  <option value="3">Ended</option>
+                  <option value="4">Canceled</option>
+                  <option value="5">Pilot</option>
+                </select>
+              </div>
             </div>
           </div>
           <div class="filter-field">
-            <label for="tv-status-filter">Status</label>
-            <select class="filter-select" id="tv-status-filter">
-              <option value="">Any</option>
-              <option value="0">Returning Series</option>
-              <option value="1">Planned</option>
-              <option value="2">In Production</option>
-              <option value="3">Ended</option>
-              <option value="4">Canceled</option>
-              <option value="5">Pilot</option>
-            </select>
+            <div class="filter-summary">
+              <span class="filter-summary-title">Language</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
+            </div>
+            <div class="filter-detail">
+              <div class="filter-detail-content">
+                <label for="tv-language-filter">Language</label>
+                <select class="filter-select" id="tv-language-filter"></select>
+              </div>
+            </div>
           </div>
           <div class="filter-field">
-            <label for="tv-language-filter">Original language</label>
-            <select class="filter-select" id="tv-language-filter"></select>
+            <div class="filter-summary">
+              <span class="filter-summary-title">Country</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
+            </div>
+            <div class="filter-detail">
+              <div class="filter-detail-content">
+                <label for="tv-country-filter">Country</label>
+                <select class="filter-select" id="tv-country-filter"></select>
+              </div>
+            </div>
           </div>
           <div class="filter-field">
-            <label for="tv-country-filter">Country</label>
-            <select class="filter-select" id="tv-country-filter"></select>
+            <div class="filter-summary">
+              <span class="filter-summary-title">Provider</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
+            </div>
+            <div class="filter-detail">
+              <div class="filter-detail-content">
+                <label for="tv-provider-filter">Provider</label>
+                <select class="filter-select" id="tv-provider-filter"></select>
+              </div>
+            </div>
           </div>
           <div class="filter-field">
-            <label for="tv-provider-filter">Provider</label>
-            <select class="filter-select" id="tv-provider-filter"></select>
-          </div>
-          <div class="filter-field">
-            <label for="tv-genre-filter">Genre</label>
-            <select class="filter-select" id="tv-genre-filter"></select>
+            <div class="filter-summary">
+              <span class="filter-summary-title">Genre</span>
+              <span class="filter-summary-value" data-summary-value>Any</span>
+            </div>
+            <div class="filter-detail">
+              <div class="filter-detail-content">
+                <label for="tv-genre-filter">Genre</label>
+                <select class="filter-select" id="tv-genre-filter"></select>
+              </div>
+            </div>
           </div>
         </div>
         <div class="media-grid" id="tvshows-grid"></div>
@@ -3201,6 +3631,20 @@
     let tvGenres = [];
     let movieWatchProviders = [];
     let tvWatchProviders = [];
+
+    // Filter state
+    let filterStates = {
+      movies: {
+        logic: 'AND', // AND or OR
+        groups: {},
+        active: {}     // { filterId: value }
+      },
+      tvshows: {
+        logic: 'AND',
+        groups: {},
+        active: {}
+      }
+    };
     let filterCountries = [];
     let filterLanguages = [];
     let currentMovieGenre = null;
@@ -3868,6 +4312,267 @@
     }
 
     // ==================== PAGE SWITCHING ====================
+    // ==================== FILTER HELPERS ====================
+    function getDefaultFilterValue(filterId) {
+      const defaults = {
+        'movie-release-year-min': '1900',
+        'movie-release-year-max': '2030',
+        'movie-rating-min': '0',
+        'movie-rating-max': '10',
+        'movie-vote-min': '0',
+        'movie-vote-max': '10000',
+        'tv-first-air-year-min': '1900',
+        'tv-first-air-year-max': '2030',
+        'tv-vote-min': '0',
+        'tv-vote-max': '10000'
+      };
+      return defaults[filterId] || '';
+    }
+
+    function getActiveFilters(pageType) {
+      const filters = {};
+      const panel = document.querySelector(`[data-filter-panel="${pageType}"]`);
+      if (!panel) return filters;
+
+      // Check range filters
+      panel.querySelectorAll('[data-range-filter]').forEach(field => {
+        const minInput = field.querySelector('[type="range"]');
+        const maxInput = field.querySelector('[type="range"]:nth-of-type(2)');
+        if (minInput && maxInput) {
+          const minVal = minInput.value;
+          const maxVal = maxInput.value;
+          const defaultMin = minInput.getAttribute('data-default-value');
+          const defaultMax = maxInput.getAttribute('data-default-value');
+          
+          if (minVal !== defaultMin || maxVal !== defaultMax) {
+            const label = field.querySelector('label')?.textContent || 'Unknown';
+            filters[minInput.id] = `${label}: ${minVal}–${maxVal}`;
+          }
+        }
+      });
+
+      // Check select dropdowns (only if not default "Any")
+      panel.querySelectorAll('select.filter-select').forEach(select => {
+        if (select.value && select.value !== '') {
+          const label = select.parentElement?.querySelector('label')?.textContent || 'Unknown';
+          const selectedText = select.options[select.selectedIndex]?.text || select.value;
+          filters[select.id] = `${label}: ${selectedText}`;
+        }
+      });
+
+      return filters;
+    }
+
+    function renderActiveFilters(pageType) {
+      const container = document.querySelector(`[data-filter-container="${pageType}"]`);
+      if (!container) return;
+
+      const filters = getActiveFilters(pageType);
+      container.innerHTML = '';
+
+      Object.entries(filters).forEach(([filterId, displayText]) => {
+        const pill = document.createElement('div');
+        pill.className = 'filter-pill';
+        pill.innerHTML = `
+          ${displayText}
+          <span class="filter-pill-remove" data-remove="${filterId}">✕</span>
+        `;
+        pill.querySelector('.filter-pill-remove').addEventListener('click', (e) => {
+          e.stopPropagation();
+          resetFilter(filterId, pageType);
+        });
+        container.appendChild(pill);
+      });
+
+      // Update filter count
+      updateFilterToggleState(pageType);
+    }
+
+    function resetFilter(filterId, pageType) {
+      const el = document.getElementById(filterId);
+      if (!el) return;
+
+      if (el.tagName === 'SELECT') {
+        el.value = '';
+      } else {
+        const defaultValue = el.getAttribute('data-default-value');
+        el.value = defaultValue !== null ? defaultValue : '';
+      }
+
+      const rangeField = el.closest('[data-range-filter]');
+      if (rangeField) {
+        const allInputs = rangeField.querySelectorAll('[type="range"]');
+        allInputs.forEach(inp => {
+          inp.value = inp.getAttribute('data-default-value');
+          updateRangeDisplay(inp);
+        });
+        updateFilterSummary(rangeField);
+      } else {
+        const field = el.closest('.filter-field');
+        if (field) updateFilterSummary(field);
+      }
+
+      renderActiveFilters(pageType);
+      refreshGrid(pageType);
+    }
+
+    function updateFilterToggleState(pageType) {
+      const toggle = document.querySelector(`[data-filter-toggle="${pageType}"]`);
+      const filters = getActiveFilters(pageType);
+      const hasFilters = Object.keys(filters).length > 0;
+      
+      if (hasFilters) {
+        toggle?.classList.add('active');
+      } else {
+        toggle?.classList.remove('active');
+      }
+    }
+
+    function toggleFilterPanel(pageType) {
+      const panel = document.querySelector(`[data-filter-panel="${pageType}"]`);
+      const toggle = document.querySelector(`[data-filter-toggle="${pageType}"]`);
+      
+      if (!panel) return;
+
+      // If panel is currently open, interpret toggle as Clear All + close
+      if (panel.classList.contains('open')) {
+        clearAllFilters(pageType);
+        if (toggle) toggle.classList.remove('active');
+        return;
+      }
+
+      // Otherwise open panel
+      panel.classList.add('open');
+      if (toggle) toggle.classList.add('active');
+      updateFilterToggleState(pageType);
+    }
+
+    function clearAllFilters(pageType) {
+      const panel = document.querySelector(`[data-filter-panel="${pageType}"]`);
+      if (!panel) return;
+
+      // Reset range inputs
+      panel.querySelectorAll('[type="range"]').forEach(input => {
+        const defaultValue = input.getAttribute('data-default-value');
+        input.value = defaultValue;
+        updateRangeDisplay(input);
+      });
+
+      // Reset select dropdowns
+      panel.querySelectorAll('select.filter-select').forEach(select => {
+        select.value = '';
+      });
+
+      // Reset TV status if present
+      const statusSelect = panel.querySelector('#tv-status-filter');
+      if (statusSelect) {
+        statusSelect.value = '';
+      }
+
+      updateAllFilterSummaries(pageType);
+      renderActiveFilters(pageType);
+      panel.classList.remove('open');
+      refreshGrid(pageType);
+    }
+
+    function setFilterLogic(pageType, logic) {
+      filterStates[pageType].logic = logic;
+      document.querySelectorAll(`[data-filter-operator="${pageType}"] .filter-logic-btn`).forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-operator') === logic) {
+          btn.classList.add('active');
+        }
+      });
+      refreshGrid(pageType);
+    }
+
+    function updateRangeDisplay(input) {
+      const field = input.closest('[data-range-filter]');
+      if (!field) return;
+
+      const rangeKind = field.getAttribute('data-range-kind');
+      const labelSpan = field.querySelector('[data-range-label]');
+      
+      const minInput = field.querySelector('[type="range"]');
+      const maxInput = field.querySelector('[type="range"]:nth-of-type(2)');
+
+      if (minInput && maxInput && labelSpan) {
+        const parseNum = rangeKind === 'year' ? parseInt : parseFloat;
+        const minVal = parseNum(minInput.value);
+        const maxVal = parseNum(maxInput.value);
+        const defaultMin = parseNum(minInput.getAttribute('data-default-value'));
+        const defaultMax = parseNum(maxInput.getAttribute('data-default-value'));
+
+        if (rangeKind === 'year') {
+          if (minVal === defaultMin && maxVal === defaultMax) {
+            labelSpan.textContent = 'Any years';
+          } else {
+            labelSpan.textContent = `${minVal} – ${maxVal}`;
+          }
+        } else {
+          if (minVal === defaultMin && maxVal === defaultMax) {
+            labelSpan.textContent = 'Any';
+          } else {
+            labelSpan.textContent = `${minVal.toFixed(1)} – ${maxVal.toFixed(1)}`;
+          }
+        }
+      }
+    }
+
+    function updateFilterSummary(field) {
+      if (!field) return;
+      const summaryValue = field.querySelector('[data-summary-value]');
+      if (!summaryValue) return;
+
+      const rangeLabel = field.querySelector('[data-range-label]');
+      if (rangeLabel) {
+        summaryValue.textContent = rangeLabel.textContent || 'Any';
+        return;
+      }
+
+      const select = field.querySelector('select.filter-select');
+      if (select) {
+        const selectedText = select.options[select.selectedIndex]?.text || 'Any';
+        summaryValue.textContent = select.value && select.value !== '' ? selectedText : 'Any';
+        return;
+      }
+
+      summaryValue.textContent = 'Any';
+    }
+
+    function updateAllFilterSummaries(pageType) {
+      const panel = document.querySelector(`[data-filter-panel="${pageType}"]`);
+      if (!panel) return;
+      panel.querySelectorAll('.filter-field').forEach(field => updateFilterSummary(field));
+    }
+
+    function getFilterGroupLogic(pageType, groupId) {
+      return (filterStates[pageType]?.groups?.[groupId]) || 'AND';
+    }
+
+    function setFilterGroupLogic(pageType, groupId, logic) {
+      if (!filterStates[pageType]) return;
+      filterStates[pageType].groups = filterStates[pageType].groups || {};
+      filterStates[pageType].groups[groupId] = logic;
+
+      const group = document.querySelector(`[data-group-logic="${groupId}"]`);
+      if (group) {
+        group.querySelectorAll('button').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-logic') === logic);
+        });
+      }
+
+      refreshGrid(pageType);
+    }
+
+    function refreshGrid(pageType) {
+      if (pageType === 'movies') {
+        applyMovieFilters();
+      } else if (pageType === 'tvshows') {
+        applyTVFilters();
+      }
+    }
+
     function showPage(page) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -5807,6 +6512,89 @@
         if (p) p.addEventListener('click', () => rowPrev(rowId));
         if (n) n.addEventListener('click', () => rowNext(rowId));
       });
+
+      // ==================== FILTER INITIALIZATION ====================
+      ['movies', 'tvshows'].forEach(pageType => {
+        // Toggle filter panel button
+        const toggleBtn = document.querySelector(`[data-filter-toggle="${pageType}"]`);
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', () => {
+            toggleFilterPanel(pageType);
+            updateAllFilterSummaries(pageType);
+          });
+        }
+
+        // Clear all filters button
+        const clearBtn = document.querySelector(`[data-filter-clear="${pageType}"]`);
+        if (clearBtn) {
+          clearBtn.addEventListener('click', () => clearAllFilters(pageType));
+        }
+
+        // Range inputs
+        const panel = document.querySelector(`[data-filter-panel="${pageType}"]`);
+        if (panel) {
+          panel.querySelectorAll('[type="range"]').forEach(input => {
+            input.addEventListener('input', () => {
+              updateRangeDisplay(input);
+              const field = input.closest('.filter-field');
+              updateFilterSummary(field);
+              renderActiveFilters(pageType);
+              refreshGrid(pageType);
+            });
+          });
+
+          // Select dropdowns
+          panel.querySelectorAll('select.filter-select').forEach(select => {
+            select.addEventListener('change', () => {
+              const field = select.closest('.filter-field');
+              updateFilterSummary(field);
+              renderActiveFilters(pageType);
+              refreshGrid(pageType);
+            });
+          });
+
+          // TV Status dropdown
+          const statusSelect = panel.querySelector('#tv-status-filter');
+          if (statusSelect) {
+            statusSelect.addEventListener('change', () => {
+              const field = statusSelect.closest('.filter-field');
+              updateFilterSummary(field);
+              renderActiveFilters(pageType);
+              refreshGrid(pageType);
+            });
+          }
+
+          // Group logic buttons
+          panel.querySelectorAll('.filter-group-logic button').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const group = btn.closest('.filter-group-logic');
+              if (!group) return;
+              const groupId = group.getAttribute('data-group-logic');
+              const logic = btn.getAttribute('data-logic');
+              setFilterGroupLogic(pageType, groupId, logic);
+            });
+          });
+
+          // Range reset buttons
+          panel.querySelectorAll('[data-range-reset]').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const field = btn.closest('[data-range-filter]');
+              if (field) {
+                field.querySelectorAll('[type="range"]').forEach(inp => {
+                  inp.value = inp.getAttribute('data-default-value');
+                  updateRangeDisplay(inp);
+                });
+                updateFilterSummary(field);
+                renderActiveFilters(pageType);
+                refreshGrid(pageType);
+              }
+            });
+          });
+
+          updateAllFilterSummaries(pageType);
+        }
+      });
+
       initHome();
     });
   </script>
