@@ -4834,7 +4834,7 @@
           return `https://mapple.uk/watch/tv/${id}-${season}-${episode}?autoPlay=true`;
         case 'torrent':
           if (type === 'movie') return `https://rivestream.ru/embed/torrent?type=movie&id=${id}`;
-          return `https://rivestream.ru/torrent?type=tv&id=${id}&season=${season}&episode=${episode}`;
+          return `https://rivestream.ru/embed/torrent?type=tv&id=${id}&season=${season}&episode=${episode}`;
         case 'aggregator':
           if (type === 'movie') return `https://rivestream.ru/embed/agg?type=movie&id=${id}`;
           return `https://rivestream.ru/embed/agg?type=tv&id=${id}&season=${season}&episode=${episode}`;
