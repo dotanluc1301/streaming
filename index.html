@@ -3647,6 +3647,8 @@
           <button class="provider-tab" onclick="setProvider('vidnest', this)">VidNest</button>
           <button class="provider-tab" onclick="setProvider('111movies', this)">111Movies</button>
           <button class="provider-tab" onclick="setProvider('mappletv', this)">MappleTV</button>
+          <button class="provider-tab" onclick="setProvider('torrent', this)">Torrent</button>
+          <button class="provider-tab" onclick="setProvider('aggregator', this)">Aggregator</button>
           <button class="provider-tab" onclick="setProvider('vsembed', this)">VSEmbed</button>
           <button class="provider-tab" onclick="setProvider('rivestream', this)">RiveStream</button>
           <button class="provider-tab" onclick="setProvider('vidsrc', this)">VidSrc</button>
@@ -3712,6 +3714,8 @@
         <option value="vidnest">VidNest</option>
         <option value="111movies">111Movies</option>
         <option value="mappletv">MappleTV</option>
+        <option value="torrent">Torrent</option>
+        <option value="aggregator">Aggregator</option>
         <option value="vsembed">VSEmbed</option>
         <option value="rivestream">RiveStream</option>
         <option value="vidsrc">VidSrc</option>
@@ -3795,6 +3799,8 @@
             <option value="vidnest">VidNest</option>
             <option value="111movies">111Movies</option>
             <option value="mappletv">MappleTV</option>
+            <option value="torrent">Torrent</option>
+            <option value="aggregator">Aggregator</option>
             <option value="vsembed">VSEmbed</option>
             <option value="rivestream">RiveStream</option>
             <option value="vidsrc">VidSrc</option>
@@ -4654,7 +4660,7 @@
     }
 
     function renderSeasonOptions(seasons, selectedSeason) {
-      const html = seasons.map(s => `<option value="${s.season_number}">Season ${s.season_number}${s.name ? ' — ' + escHtml(s.name) : ''}</option>`).join('');
+      const html = seasons.map(s => `<option value="${s.season_number}">Season ${s.season_number}</option>`).join('');
       const selectedValue = seasons.some(s => Number(s.season_number) === Number(selectedSeason))
         ? selectedSeason
         : (seasons[0] ? seasons[0].season_number : selectedSeason);
@@ -4812,8 +4818,8 @@
       switch (provider) {
         /*1080p*/
         case 'vidking':
-          if (type === 'movie') return `https://vidking.net/embed/movie/${id}/?color=e50914&autoPlay=true&nextEpisode=true&episodeSelector=true`;
-          return `https://vidking.net/embed/tv/${id}/${season}/${episode}?color=e50914&autoPlay=true&nextEpisode=true&episodeSelector=true`;
+          if (type === 'movie') return `https://vidking.net/embed/movie/${id}/?color=e50914&autoPlay=true`;
+          return `https://vidking.net/embed/tv/${id}/${season}/${episode}?color=e50914&autoPlay=true`;
         case 'vidfastnet':
           if (type === 'movie') return `https://vidfast.pro/movie/${providerId}?autoPlay=true`;
           return `https://vidfast.pro/tv/${providerId}/${season}/${episode}?autoPlay=true`;
@@ -4826,10 +4832,16 @@
         case 'mappletv':
           if (type === 'movie') return `https://mapple.uk/watch/movie/${id}?autoPlay=true`;
           return `https://mapple.uk/watch/tv/${id}-${season}-${episode}?autoPlay=true`;
+        case 'torrent':
+          if (type === 'movie') return `https://rivestream.ru/embed/torrent?type=movie&id=${id}`;
+          return `https://rivestream.ru/torrent?type=tv&id=${id}&season=${season}&episode=${episode}`;
+        case 'aggregator':
+          if (type === 'movie') return `https://rivestream.ru/embed/agg?type=movie&id=${id}`;
+          return `https://rivestream.ru/embed/agg?type=tv&id=${id}&season=${season}&episode=${episode}`;
         /*720p*/
         case 'vsembed':
-          if (type === 'movie') return usesImdbId(provider) && imdbId ? `https://vsembed.ru/embed/movie?imdb=${providerId}` : `https://vsembed.ru/embed/movie?tmdb=${providerId}`;
-          return usesImdbId(provider) && imdbId ? `https://vsembed.ru/embed/tv?imdb=${providerId}&season=${season}&episode=${episode}` : `https://vsembed.ru/embed/tv?tmdb=${providerId}&season=${season}&episode=${episode}`;
+          if (type === 'movie') return usesImdbId(provider) && imdbId ? `https://vsembed.ru/embed/movie?imdb=${providerId}&autoplay=1` : `https://vsembed.ru/embed/movie?tmdb=${providerId}&autoplay=1`;
+          return usesImdbId(provider) && imdbId ? `https://vsembed.ru/embed/tv?imdb=${providerId}&season=${season}&episode=${episode}&autoplay=1` : `https://vsembed.ru/embed/tv?tmdb=${providerId}&season=${season}&episode=${episode}&autoplay=1`;
         case 'rivestream':
           if (type === 'movie') return `https://rivestream.ru/embed?type=movie&id=${id}`;
           return `https://rivestream.ru/embed?type=tv&id=${id}&season=${season}&episode=${episode}`;
