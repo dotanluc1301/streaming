@@ -1889,6 +1889,100 @@
       box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
     }
 
+    /* Gear dropdown */
+    .player-gear-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .player-gear-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 10;
+      min-width: 220px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .player-gear-dropdown.open {
+      display: block;
+    }
+
+    .player-gear-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .player-gear-option input[type="checkbox"] {
+      accent-color: var(--accent-1);
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Auto-play next episode overlay */
+    .autoplay-next-overlay {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 10;
+      box-shadow: var(--shadow-md), var(--shadow-glow);
+      animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .autoplay-next-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .autoplay-next-cancel {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .autoplay-next-cancel:hover {
+      background: rgba(219, 39, 119, 0.3);
+      border-color: var(--accent-2);
+      color: #fff;
+    }
     .player-frame-wrap {
       flex: 1;
       position: relative;
@@ -2924,7 +3018,7 @@
           <div class="section-title">
             <div class="section-accent"></div>▶ Continue Watching
           </div>
-          <button class="section-more" onclick="clearHistory()">Clear All</button>
+          <button class="section-more" onclick="clearAllWatchData()">Clear All</button>
         </div>
         <div class="carousel-wrap">
           <button class="carousel-nav left" id="cw-prev" aria-label="Previous">❮</button>
@@ -3708,6 +3802,18 @@
           </div>
         </div>
       </div>
+      <!-- Auto-play gear settings (TV only) -->
+      <div class="player-gear-wrap" id="player-gear-wrap" style="display:none">
+        <button class="player-action-btn" id="player-gear-btn" onclick="toggleAutoPlayMenu()" title="Playback Settings">
+          <i class="fa fa-cog" aria-hidden="true"></i>
+        </button>
+        <div class="player-gear-dropdown" id="player-gear-dropdown">
+          <label class="player-gear-option">
+            <input type="checkbox" id="autoplay-next-checkbox" checked>
+            <span>Auto play next episode</span>
+          </label>
+        </div>
+      </div>
       <select class="player-provider-select" id="player-provider-select" onchange="switchPlayerProvider(this.value)">
         <option value="vidking">Vidking</option>
         <option value="vidfastnet">Vidfast</option>
@@ -3728,6 +3834,11 @@
         <div class="player-loading-text">Loading stream…</div>
       </div>
       <iframe id="player-iframe" allowfullscreen referrerpolicy="origin" allow="fullscreen; autoplay"></iframe>
+      <!-- Auto-play next episode overlay -->
+      <div class="autoplay-next-overlay" id="autoplay-next-overlay" style="display:none">
+        <button class="btn-primary" id="autoplay-next-text" style="padding: 8px 16px; font-size: 0.85rem; border-radius: var(--radius-sm); border: none;" onclick="triggerNextEpisodeImmediately()"></button>
+        <button class="autoplay-next-cancel" id="autoplay-next-cancel" onclick="cancelAutoPlayNext()" title="Cancel">✕</button>
+      </div>
     </div>
   </div>
 
@@ -3836,7 +3947,7 @@
             style="width:100%; justify-content:center; font-size:0.85rem; padding:9px">
             🗑 Clear Watchlist
           </button>
-          <button class="btn-secondary" onclick="clearHistory(); showToast('History cleared', 'success')"
+          <button class="btn-secondary" onclick="clearAllWatchData(); showToast('History cleared', 'success')"
             style="width:100%; justify-content:center; font-size:0.85rem; padding:9px">
             🗑 Clear Watch History
           </button>
@@ -4584,22 +4695,9 @@
       }
     }
 
-    // ==================== HISTORY ====================
-    function getHistory() {
-      try { return JSON.parse(localStorage.getItem('cinestream_history') || '[]'); } catch (e) { return []; }
-    }
-    function saveHistory(list) { localStorage.setItem('cinestream_history', JSON.stringify(list)); }
-    function addToHistory(item) {
-      let list = getHistory().filter(i => !(i.id === item.id && i.season === item.season && i.episode === item.episode));
-      list.unshift(item);
-      if (list.length > 20) list = list.slice(0, 20);
-      saveHistory(list);
-      renderHistory();
-    }
-    function clearHistory() {
-      saveHistory([]);
+    // ==================== WATCH DATA / PROGRESS ====================
+    function clearAllWatchData() {
       saveAllProgress({});
-      renderContinueWatching();
     }
 
     // ==================== TMDB API ====================
@@ -5878,6 +5976,7 @@
 
     function saveAllProgress(progress) {
       localStorage.setItem('cinestream_progress', JSON.stringify(progress));
+      window.dispatchEvent(new CustomEvent('cinestream-progress-changed'));
     }
 
     function getProgressKey(id, type) {
@@ -5987,13 +6086,184 @@
       saveAllProgress(progress);
     }
 
+    let autoPlayCountdown = null;
+    let autoPlayCountdownInterval = null;
+    let autoPlayTriggered = false;
+    let nextEpisodeTarget = null;
+
+    function isAutoPlayNextEnabled() {
+      const checkbox = document.getElementById('autoplay-next-checkbox');
+      return checkbox ? checkbox.checked : true;
+    }
+
+    function toggleAutoPlayMenu() {
+      const dropdown = document.getElementById('player-gear-dropdown');
+      if (dropdown) {
+        dropdown.classList.toggle('open');
+      }
+    }
+
+    // Close gear menu when clicking outside
+    document.addEventListener('click', e => {
+      const gearWrap = document.getElementById('player-gear-wrap');
+      const dropdown = document.getElementById('player-gear-dropdown');
+      if (gearWrap && dropdown && !gearWrap.contains(e.target)) {
+        dropdown.classList.remove('open');
+      }
+    });
+
+    function checkAutoPlayNext() {
+      if (autoPlayTriggered) return;
+      if (currentPlayer && currentPlayer.type === 'tv' && isAutoPlayNextEnabled()) {
+        const nextInfo = getNextEpisodeInfo();
+        if (nextInfo) {
+          autoPlayTriggered = true;
+          startAutoPlayCountdown(nextInfo.season, nextInfo.episode);
+        }
+      }
+    }
+
+    function startAutoPlayCountdown(season, episode) {
+      nextEpisodeTarget = { season, episode };
+      autoPlayCountdown = 30;
+      
+      const overlay = document.getElementById('autoplay-next-overlay');
+      const textBtn = document.getElementById('autoplay-next-text');
+      if (!overlay || !textBtn) return;
+      
+      textBtn.textContent = `Next episode in ${autoPlayCountdown}s`;
+      overlay.style.display = 'flex';
+      
+      if (autoPlayCountdownInterval) {
+        clearInterval(autoPlayCountdownInterval);
+      }
+      
+      autoPlayCountdownInterval = setInterval(() => {
+        // Only decrement if the video is NOT paused (heartbeat is active)
+        if (heartbeatInterval !== null) {
+          autoPlayCountdown--;
+          textBtn.textContent = `Next episode in ${autoPlayCountdown}s`;
+          
+          if (autoPlayCountdown <= 0) {
+            clearInterval(autoPlayCountdownInterval);
+            autoPlayCountdownInterval = null;
+            playNextEpisode(nextEpisodeTarget.season, nextEpisodeTarget.episode);
+          }
+        }
+      }, 1000);
+    }
+
+    function cancelAutoPlayNext() {
+      const overlay = document.getElementById('autoplay-next-overlay');
+      if (overlay) {
+        overlay.style.display = 'none';
+      }
+      if (autoPlayCountdownInterval) {
+        clearInterval(autoPlayCountdownInterval);
+        autoPlayCountdownInterval = null;
+      }
+      autoPlayTriggered = true; // prevent re-triggering this episode
+    }
+
+    function triggerNextEpisodeImmediately() {
+      if (nextEpisodeTarget) {
+        if (autoPlayCountdownInterval) {
+          clearInterval(autoPlayCountdownInterval);
+          autoPlayCountdownInterval = null;
+        }
+        playNextEpisode(nextEpisodeTarget.season, nextEpisodeTarget.episode);
+      }
+    }
+
+    async function playNextEpisode(season, episode) {
+      const overlay = document.getElementById('autoplay-next-overlay');
+      if (overlay) overlay.style.display = 'none';
+      if (autoPlayCountdownInterval) {
+        clearInterval(autoPlayCountdownInterval);
+        autoPlayCountdownInterval = null;
+      }
+      
+      // Stop current progress and save as completed
+      saveProgress(true);
+      stopHeartbeat(false);
+      
+      currentPlayer.season = season;
+      currentPlayer.episode = episode;
+      
+      const playerSeasonSel = document.getElementById('player-season-select');
+      const playerEpisodeSel = document.getElementById('player-episode-select');
+      const seasonSel = document.getElementById('season-select');
+      const episodeSel = document.getElementById('episode-select');
+      
+      if (playerSeasonSel && parseInt(playerSeasonSel.value) !== season) {
+        if (seasonSel) seasonSel.value = season;
+        if (playerSeasonSel) playerSeasonSel.value = season;
+        
+        await loadEpisodes(season, currentPlayer.provider, episode);
+      } else {
+        if (episodeSel) episodeSel.value = episode;
+        if (playerEpisodeSel) playerEpisodeSel.value = episode;
+      }
+      
+      playerCurrentTime = 0;
+      autoPlayTriggered = false;
+      
+      saveProgress(false);
+      startHeartbeat();
+      loadPlayerIframe(currentPlayer.provider);
+      updatePlayerSubtitle();
+    }
+
+    function getNextEpisodeInfo() {
+      if (!currentPlayer || currentPlayer.type !== 'tv') return null;
+      
+      const currentSeason = currentPlayer.season;
+      const currentEpisode = currentPlayer.episode;
+      
+      const playerEpisodeSel = document.getElementById('player-episode-select');
+      if (playerEpisodeSel) {
+        const nextEpisodeVal = currentEpisode + 1;
+        const option = playerEpisodeSel.querySelector(`option[value="${nextEpisodeVal}"]`);
+        if (option) {
+          return { season: currentSeason, episode: nextEpisodeVal };
+        }
+      }
+      
+      const playerSeasonSel = document.getElementById('player-season-select');
+      if (playerSeasonSel) {
+        const nextSeasonVal = currentSeason + 1;
+        const option = playerSeasonSel.querySelector(`option[value="${nextSeasonVal}"]`);
+        if (option) {
+          return { season: nextSeasonVal, episode: 1 };
+        }
+      }
+      
+      return null;
+    }
+
     function startHeartbeat() {
       stopHeartbeat(false);
+      autoPlayTriggered = false;
+      const overlay = document.getElementById('autoplay-next-overlay');
+      if (overlay) overlay.style.display = 'none';
+      if (autoPlayCountdownInterval) {
+        clearInterval(autoPlayCountdownInterval);
+        autoPlayCountdownInterval = null;
+      }
+
       heartbeatInterval = setInterval(() => {
         playerCurrentTime += 5;
-        if (playerDuration && playerCurrentTime >= playerDuration * 0.9) {
+        
+        // 30 seconds remaining check for TV shows
+        if (currentPlayer && currentPlayer.type === 'tv' && isAutoPlayNextEnabled() && playerDuration && (playerDuration - playerCurrentTime <= 30)) {
+          checkAutoPlayNext();
+        }
+
+        if (playerDuration && playerCurrentTime >= playerDuration) {
           saveProgress(true);
           stopHeartbeat(false);
+        } else if (playerDuration && playerCurrentTime >= playerDuration * 0.9) {
+          saveProgress(true);
         } else {
           saveProgress(false);
         }
@@ -6007,6 +6277,13 @@
       }
       if (flush) {
         saveProgress(false);
+      }
+      
+      const overlay = document.getElementById('autoplay-next-overlay');
+      if (overlay) overlay.style.display = 'none';
+      if (autoPlayCountdownInterval) {
+        clearInterval(autoPlayCountdownInterval);
+        autoPlayCountdownInterval = null;
       }
     }
 
@@ -6160,15 +6437,8 @@
 
     function removeFromContinueWatching(key) {
       const progress = getAllProgress();
-      const entry = progress[key];
       delete progress[key];
       saveAllProgress(progress);
-
-      if (entry) {
-        let hist = getHistory().filter(i => i.id !== entry.id);
-        saveHistory(hist);
-      }
-      renderContinueWatching();
       showToast('Item removed', 'success');
     }
 
@@ -6858,8 +7128,10 @@
       const seasonSel = document.getElementById('season-select');
       const episodeSel = document.getElementById('episode-select');
 
+      const gearWrap = document.getElementById('player-gear-wrap');
       if (type === 'tv') {
         if (playerControls) playerControls.style.display = 'block';
+        if (gearWrap) gearWrap.style.display = 'block';
         if (playerSeasonSel && seasonSel) {
           playerSeasonSel.innerHTML = seasonSel.innerHTML;
           playerSeasonSel.value = season;
@@ -6870,6 +7142,7 @@
         }
       } else {
         if (playerControls) playerControls.style.display = 'none';
+        if (gearWrap) gearWrap.style.display = 'none';
       }
 
       const playerProviderSel = document.getElementById('player-provider-select');
@@ -6885,10 +7158,6 @@
 
       updatePlayerWatchlistBtn(id);
       updatePlayerFavoriteBtn(id);
-
-      // Add to history (classic)
-      const poster = modalItem ? posterUrl(modalItem.poster_path, 'w92') : null;
-      addToHistory({ id, type, title, poster, season, episode });
 
       // Start tracking progress via heartbeat
       startHeartbeat();
@@ -6939,9 +7208,6 @@
       document.getElementById('player-overlay').classList.remove('open');
       document.getElementById('player-iframe').src = 'about:blank';
       document.body.style.overflow = '';
-
-      // Refresh the continue watching row
-      renderContinueWatching();
     }
 
     // ==================== SETTINGS PANEL ====================
@@ -7190,6 +7456,14 @@
           });
 
           updateAllFilterSummaries(pageType);
+        }
+      });
+
+      // Reactive UI listeners
+      window.addEventListener('cinestream-progress-changed', renderContinueWatching);
+      window.addEventListener('storage', e => {
+        if (e.key === 'cinestream_progress') {
+          renderContinueWatching();
         }
       });
 
